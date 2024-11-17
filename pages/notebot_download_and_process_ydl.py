@@ -44,6 +44,8 @@ else:
 # Replace with your OpenAI API key
 client = OpenAI(api_key=st.secrets["openai"]["OPEN_AI_KEY"])
 
+# I'm making a random comment to make sure git is working 
+
 
 st.title("Notebot: Process audio / video to text")
 
