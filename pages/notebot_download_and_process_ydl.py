@@ -23,12 +23,12 @@ st.set_page_config(
 # ----------------------------------------------------------------------------------
 
 # load the whisper model
-if 'model' not in st.session_state:
-    # st.session_state.model = whisper.load_model("large")
-    # st.session_state.model = whisper.load_model("medium")
-    st.session_state.model = whisper.load_model("small")
-else:
-    model = st.session_state.model
+# if 'model' not in st.session_state:
+#     # st.session_state.model = whisper.load_model("large")
+#     # st.session_state.model = whisper.load_model("medium")
+#     # st.session_state.model = whisper.load_model("small")
+# else:
+#     model = st.session_state.model
 # model = whisper.load_model("large")
 # model = whisper.load_model("medium")
 # model = whisper.load_model("small")
