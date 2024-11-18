@@ -407,7 +407,7 @@ if submit_button:
                             uploaded_file_name = uploaded_file.name.split(".")[0]
 
                             # this makes sure that requests are segregated by each user
-                            user_directory = f'Audio/'
+                            user_directory = f'Audio/{topic_chosen}/'
 
                             logging_filename = f"{uploaded_file_name}.mp3"
                             full_file_path = f'{user_directory}{logging_filename}'
@@ -425,7 +425,7 @@ if submit_button:
                             metadata_df["Topic"] = topic_chosen
 
                             # this makes sure that requests are segregated by each user
-                            user_directory = f'MetaData/'
+                            user_directory = f'MetaData/{topic_chosen}/'
 
                             logging_filename = f"{uploaded_file_name}_metadata.csv"
                             full_file_path = f'{user_directory}{logging_filename}'
