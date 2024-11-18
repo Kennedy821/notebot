@@ -69,6 +69,8 @@ for idx, section in enumerate(sections):
         # Display the image
         st.image(section["image"], use_column_width=True, caption=section["label"])
 
+        # Make the image clickable
+
         if st.button(f"Go to {section['label']}", key=f"btn_{idx}", use_container_width=True):
             # st.experimental_set_query_params(page=section["url"])
 
@@ -77,17 +79,16 @@ for idx, section in enumerate(sections):
             <meta http-equiv="refresh" content="0; url={redirect_url}">
             """, unsafe_allow_html=True)
 
-        # Make the image clickable
-        internal_cols_1,internal_cols_2,internal_cols_3  = st.columns([1,6,1])
-        with internal_cols_1:
-            pass
-        with internal_cols_2:
-            if st.button(f"Go to {section['label']}", key=f"btn_{idx}", use_container_width=True):
-                # st.experimental_set_query_params(page=section["url"])
+        # internal_cols_1,internal_cols_2,internal_cols_3  = st.columns([1,6,1])
+        # with internal_cols_1:
+        #     pass
+        # with internal_cols_2:
+        #     if st.button(f"Go to {section['label']}", key=f"btn_{idx}", use_container_width=True):
+        #         # st.experimental_set_query_params(page=section["url"])
 
-                redirect_url = f"{section["url"]}"
-                st.markdown(f"""
-                <meta http-equiv="refresh" content="0; url={redirect_url}">
-                """, unsafe_allow_html=True)
-        with internal_cols_3:
-            pass
+        #         redirect_url = f"{section["url"]}"
+        #         st.markdown(f"""
+        #         <meta http-equiv="refresh" content="0; url={redirect_url}">
+        #         """, unsafe_allow_html=True)
+        # with internal_cols_3:
+        #     pass
