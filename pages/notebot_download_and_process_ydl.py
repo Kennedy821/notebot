@@ -421,7 +421,7 @@ if submit_button:
 
                             metadata_df = pd.DataFrame([uploaded_file.name])
                             metadata_df.columns = ["filename"]
-                            metadata_df["filetype"] = uploaded_file.type
+                            metadata_df["filetype"] = uploaded_file_type
                             metadata_df["Topic"] = topic_chosen
 
                             # this makes sure that requests are segregated by each user
@@ -441,6 +441,7 @@ if submit_button:
 
 
 
+                            st.success("Successfully uploaded your audio file!")
 
 
 
