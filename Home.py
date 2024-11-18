@@ -15,6 +15,8 @@ im = Image.open('slug_logo.png')
 st.set_page_config(
     page_title="Hello",
     page_icon=im,
+    initial_sidebar_state="collapsed",
+    layout="wide"
 )
 
 st.write(f"<h2 class='black-text'>  Welcome to Notebot - a simple notetaking app by Slug </h2>",unsafe_allow_html=True)
@@ -67,7 +69,7 @@ for idx, section in enumerate(sections):
         # Display the image
         st.image(section["image"], use_column_width=True, caption=section["label"])
         # Make the image clickable
-        internal_cols_1,internal_cols_2,internal_cols_3  = st.columns(3)
+        internal_cols_1,internal_cols_2,internal_cols_3  = st.columns(1,6,1)
         with internal_cols_1:
             pass
         with internal_cols_2:
