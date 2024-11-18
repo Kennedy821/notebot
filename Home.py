@@ -56,6 +56,9 @@ sections = [
 ]
 
 
+
+
+
 # Display sections in three columns
 cols = st.columns(3)
 
@@ -65,4 +68,9 @@ for idx, section in enumerate(sections):
         st.image(section["image"], use_column_width=True, caption=section["label"])
         # Make the image clickable
         if st.button(f"Go to {section['label']}", key=f"btn_{idx}"):
-            st.experimental_set_query_params(page=section["url"])
+            # st.experimental_set_query_params(page=section["url"])
+
+            redirect_url = f"{section["url"]}"
+            st.markdown(f"""
+            <meta http-equiv="refresh" content="0; url={redirect_url}">
+            """, unsafe_allow_html=True)
