@@ -67,7 +67,7 @@ for idx, section in enumerate(sections):
         # Display the image
         st.image(section["image"], use_column_width=True, caption=section["label"])
         # Make the image clickable
-        internal_cols = st.col(3)
+        internal_cols = st.columns(3)
         with internal_cols[1]:
             pass
         with internal_cols[2]:
