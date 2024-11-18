@@ -13,7 +13,7 @@ SECRET_KEY = st.secrets["general"]["SECRET_KEY"]
 
 im = Image.open('slug_logo.png')
 st.set_page_config(
-    page_title="PSIL",
+    page_title="Notebot",
     page_icon=im,
     initial_sidebar_state="collapsed",
     ) 
@@ -103,7 +103,7 @@ if st.button("Login"):
 
 
                 # The bucket on GCS in which to write the CSV file
-                bucket = client.bucket('psil-app-backend-2')
+                bucket = client.bucket('notebot-backend-2')
                 # The name assigned to the CSV file on GCS
                 blob = bucket.blob('user_login_request.csv')
 
@@ -129,8 +129,7 @@ if st.button("Login"):
                     # token = generate_token(email)  # Generate token after login
                     st.success("Login successful!")
                     
-                    # # Redirect to external site with the token as a query parameter
-                    # redirect_url = f"https://psilproject.streamlit.app/research_app_gcs_login?token={token}"
+
                     st.markdown(f"""
                     <meta http-equiv="refresh" content="0; url={redirect_url}">
                     """, unsafe_allow_html=True)
