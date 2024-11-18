@@ -277,8 +277,9 @@ def check_for_topics():
     # Iterate over all blobs in the 'users/' directory
     for blob in blobs:
         st.write(blob.name)
-
-        topic_list.append(blob.name.split(".")[0].split("/")[-2])
+        topic_name = blob.name.split(".")[0].split("/")[-2]
+        if topic_name != "Transcripts":
+            topic_list.append(topic_name)
     return topic_list
 
 # # Example usage
