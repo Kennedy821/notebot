@@ -46,3 +46,23 @@ hide_default_format = """
        </style>
        """
 st.markdown(hide_default_format, unsafe_allow_html=True)
+
+# Define the sections
+
+sections = [
+    {"image": "slug_logo.png", "label": "Section 1", "url": "https://notebot.streamlit.app/notebot_download_and_process_ydl"},
+    {"image": "slug_logo.png", "label": "Section 2", "url": "https://notebot.streamlit.app/notebot_generate_notes"},
+    {"image": "slug_logo.png", "label": "Section 3", "url": "https://notebot.streamlit.app/notebot_study_multiselect"},
+]
+
+
+# Display sections in three columns
+cols = st.columns(3)
+
+for idx, section in enumerate(sections):
+    with cols[idx % 3]:  # Dynamically choose a column
+        # Display the image
+        st.image(section["image"], use_column_width=True, caption=section["label"])
+        # Make the image clickable
+        if st.button(f"Go to {section['label']}", key=f"btn_{idx}"):
+            st.experimental_set_query_params(page=section["url"])
