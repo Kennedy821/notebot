@@ -419,8 +419,8 @@ if submit_button:
 
                             # next upload a file with the metadata for this file
 
-                            metadata_df = pd.DataFrame()
-                            metadata_df["filename"] = uploaded_file.name
+                            metadata_df = pd.DataFrame([uploaded_file.name])
+                            metadata_df.columns = ["filename"]
                             metadata_df["filetype"] = uploaded_file.type
                             metadata_df["Topic"] = topic_chosen
 
