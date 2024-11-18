@@ -277,6 +277,7 @@ def check_for_topics():
 
     # Iterate over all blobs in the 'users/' directory
     for blob in blobs:
+        st.write(blob.name)
 
         topic_list.append(blob.name.split(".")[0])
     return topic_list
