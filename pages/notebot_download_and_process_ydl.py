@@ -278,7 +278,7 @@ def check_for_topics():
     for blob in blobs:
         st.write(blob.name)
 
-        topic_list.append(blob.name.split(".")[0].split("/")[-1])
+        topic_list.append(blob.name.split(".")[0].split("/")[-2])
     return topic_list
 
 # # Example usage
