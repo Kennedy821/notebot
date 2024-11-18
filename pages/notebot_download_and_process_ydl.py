@@ -5,7 +5,6 @@ import pandas as pd
 from openai import OpenAI
 import os
 import tiktoken
-import moviepy.editor as mp
 import yt_dlp
 from PIL import Image
 from fuzzywuzzy import fuzz
@@ -279,7 +278,7 @@ def check_for_topics():
     for blob in blobs:
         st.write(blob.name)
 
-        topic_list.append(blob.name.split(".")[0])
+        topic_list.append(blob.name.split(".")[0].split("/")[-1])
     return topic_list
 
 # # Example usage
