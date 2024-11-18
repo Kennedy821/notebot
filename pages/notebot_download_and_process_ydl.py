@@ -267,7 +267,7 @@ def check_for_topics():
     bucket = client.bucket(bucket_name)
 
     # List all blobs in the 'users/' directory
-    blobs = client.list_blobs(bucket_name, prefix='users/Transcripts/')
+    blobs = client.list_blobs(bucket_name, prefix='Transcripts/')
 
     # Initialize an empty list to store DataFrames
     topic_list = []
