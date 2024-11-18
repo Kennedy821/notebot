@@ -281,14 +281,14 @@ def check_for_topics():
         topic_list.append(blob.name.split(".")[0])
     return topic_list
 
-# Example usage
-category = "Transcripts"  # Or "Detailed Notes", "High Level Notes"
-topic = "Topic 1"
-file_name = "transcript_topic1.txt"
-file_content = "This is the content of the transcript for Topic 1."
+# # Example usage
+# category = "Transcripts"  # Or "Detailed Notes", "High Level Notes"
+# topic = "Topic 1"
+# file_name = "transcript_topic1.txt"
+# file_content = "This is the content of the transcript for Topic 1."
 
-# Save the file incrementally
-save_note(category, topic, file_name, file_content)
+# # Save the file incrementally
+# save_note(category, topic, file_name, file_content)
 
 # Offer two options for the user either they can upload their own audio or they can use a link to a video
 processing_type = st.selectbox("Would you like to upload your own audio file or use a link to a video?", options=["","upload my own audio","use a link from a website"],key='type_of_input')
