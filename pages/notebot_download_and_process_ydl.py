@@ -1,24 +1,17 @@
 import whisper
 import os
-from pytube import YouTube, Playlist
 import streamlit as st
-import openai
-# import tensorflow as tf
-# import tensorflow_hub as hub
 import pandas as pd
-# import geopandas as gp
-# import h3
-import openai
-# from shapely.geometry import Polygon
 from openai import OpenAI
 import os
 import tiktoken
 import moviepy.editor as mp
-import re
 import yt_dlp
 from PIL import Image
 from fuzzywuzzy import fuzz
 import tempfile
+from google.oauth2 import service_account
+from google.cloud import storage
 
 im = Image.open('slug_logo.png') # slug_logo.png is the image file in the same directory as the script
 st.set_page_config(
@@ -26,11 +19,15 @@ st.set_page_config(
     page_icon=im,
 )
 
+
+# the code below will be deleted as the transcription will be handled on the backend
+# ----------------------------------------------------------------------------------
+
 # load the whisper model
 if 'model' not in st.session_state:
-    st.session_state.model = whisper.load_model("large")
+    # st.session_state.model = whisper.load_model("large")
     # st.session_state.model = whisper.load_model("medium")
-    # st.session_state.model = whisper.load_model("small")
+    st.session_state.model = whisper.load_model("small")
 else:
     model = st.session_state.model
 # model = whisper.load_model("large")
@@ -39,6 +36,9 @@ else:
 
 # load spatial sentences dataframe and convert to list
 
+# ----------------------------------------------------------------------------------
+
+# delete code block above once the backend is confirmed to be working
 
 
 # Replace with your OpenAI API key
@@ -211,6 +211,76 @@ def save_note(category, topic, file_name, file_content):
 
     print(f"File '{file_name}' saved successfully in '{topic_folder}' as a Parquet file.")
 
+def save_note_cloud_version(category, topic, file_name, file_content, bucket_name):
+    """
+    Save a note in the appropriate category and topic folder in GCS.
+
+    Args:
+    category (str): The category to save the note under (e.g., 'Transcripts').
+    topic (str): The topic to save the note under.
+    file_name (str): The name of the file to be saved (without extension).
+    file_content (str): The content to be written in the file.
+    bucket_name (str): The name of the GCS bucket.
+    """
+    # Create credentials object
+    credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+
+    # Use the credentials to create a client
+    client = storage.Client(credentials=credentials)
+
+    # Get the bucket
+    bucket = client.bucket(bucket_name)
+
+    # Define the file path in the bucket
+    gcs_file_path = f"{category}/{topic}/{file_name}_transcript.parquet.gzip"
+
+    try:
+        # Convert the file content to a DataFrame
+        transcript_df = pd.DataFrame([file_content], columns=["lecture_notes"])
+
+        # Save the DataFrame to a Parquet file in memory
+        parquet_buffer = io.BytesIO()
+        transcript_df.to_parquet(parquet_buffer, compression="gzip")
+        parquet_buffer.seek(0)
+
+        # Upload the file to GCS
+        blob = bucket.blob(gcs_file_path)
+        blob.upload_from_file(parquet_buffer, content_type="application/octet-stream")
+
+        print(f"File '{file_name}' saved successfully in GCS bucket '{bucket_name}' under '{gcs_file_path}'.")
+    except Exception as e:
+        print(f"An error occurred while saving the file: {e}")
+
+
+#function to check for the topics the user has created 
+def check_for_topics():
+    # Create credentials object
+    credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+
+    # Use the credentials to create a client
+    client = storage.Client(credentials=credentials)
+
+    # Specify your bucket name
+    bucket_name = st.secrets["notebot"]["bucket_name"]
+
+    # Get the bucket object
+    bucket = client.bucket(bucket_name)
+
+    # List all blobs in the 'users/' directory
+    blobs = client.list_blobs(bucket_name, prefix='users/Transcripts/')
+
+    # Initialize an empty list to store DataFrames
+    topic_list = []
+
+    # Temporary directory for storing downloaded files (optional)
+    # temp_dir = "/tmp/"  # If needed
+
+    # Iterate over all blobs in the 'users/' directory
+    for blob in blobs:
+
+        topic_list.append(blob.name.split(".")[0])
+    return topic_list
+
 # Example usage
 category = "Transcripts"  # Or "Detailed Notes", "High Level Notes"
 topic = "Topic 1"
@@ -240,14 +310,30 @@ if topic_selection_options == "New":
 
     topic_chosen = st.text_input("Add a new topic here")
 
+
 elif topic_selection_options == "Existing":
     # check the existing directory of transcripts for this user:
-    topic_list_filepath = os.getcwd()+'/Transcripts/'
-    existing_topics_list = os.listdir(topic_list_filepath)
+
+    existing_topics_list = check_for_topics()
     existing_topics_list = [x for x in existing_topics_list if "." not in x]
     existing_topics_list = [""] + existing_topics_list
 
     topic_chosen = st.selectbox("Select which existing topic you'd like to add your transcript to", options=existing_topics_list)
+
+# this is the old working code that is being deprecated
+# |
+# |
+# v
+
+# elif topic_selection_options == "Existing":
+#     # check the existing directory of transcripts for this user:
+#     topic_list_filepath = os.getcwd()+'/Transcripts/'
+#     existing_topics_list = os.listdir(topic_list_filepath)
+#     existing_topics_list = [x for x in existing_topics_list if "." not in x]
+#     existing_topics_list = [""] + existing_topics_list
+
+#     topic_chosen = st.selectbox("Select which existing topic you'd like to add your transcript to", options=existing_topics_list)
+
 
 # if len(topic_chosen)>4:
 
