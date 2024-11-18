@@ -5,7 +5,7 @@ google-auth  # For google.oauth2.service_account
 pillow  # For PIL (Python Imaging Library)
 google-cloud-storage  # For google.cloud.storage
 pandas
-whisper
+openai-whisper
 pytube
 openai
 tiktoken
