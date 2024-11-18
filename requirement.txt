@@ -1,5 +1,4 @@
 streamlit
-pyjwt  # For jwt library
 bcrypt
 google-auth  # For google.oauth2.service_account
 pillow  # For PIL (Python Imaging Library)
@@ -14,8 +13,10 @@ pymupdf  # For fitz (PyMuPDF)
 reportlab
 markdown2
 fuzzywuzzy
-ollama
-polars
 tqdm
 numpy
 requests
+polars==0.20.31
+pathlib
+st-files-connection
+pyjwt==2.9.0
