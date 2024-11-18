@@ -20,7 +20,7 @@ from PIL import Image
 from fuzzywuzzy import fuzz
 import tempfile
 
-im = Image.open('slug_logo.png')
+im = Image.open('slug_logo.png') # slug_logo.png is the image file in the same directory as the script
 st.set_page_config(
     page_title="Hello",
     page_icon=im,
