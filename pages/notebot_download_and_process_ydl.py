@@ -276,7 +276,6 @@ def check_for_topics():
 
     # Iterate over all blobs in the 'users/' directory
     for blob in blobs:
-        st.write(blob.name)
         topic_name = blob.name.split(".")[0].split("/")[-2]
         if topic_name != "Transcripts":
             topic_list.append(topic_name)
@@ -373,27 +372,107 @@ if submit_button:
 
             if processing_type == "upload my own audio":
                 if uploaded_file is not None:
-                    # Create a temporary file
-                    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1]) as temp_file:
-                        # Write the uploaded file content to the temporary file
-                        temp_file.write(uploaded_file.getbuffer())
-                        audio_path = temp_file.name  # Get the path to the temporary file
-                    # audio_path = os.path.join(os.getcwd(), uploaded_file.name)
-                    song_name = uploaded_file.name
+
+                    # check the file is a valid file type
+
+                    
+                    if processing_type=="upload my own audio" and uploaded_file:
+
+                        # Validate file type (basic validation)
+                        if uploaded_file.type != "audio/mpeg":
+                            st.error("Invalid file type. Please upload a valid MP3 file.")
+                            st.stop()
+                        else:
+
+                            # get the details for where the uploaded file is going to go
+                            #-----------------------------------------------------------------------------------------------------
+
+                            # Create credentials object
+                            credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+
+                            # Use the credentials to create a client
+                            client = storage.Client(credentials=credentials)
 
 
-                    st.session_state['messages'].append(('You', song_name))
-                    st.markdown("beginning to process your link.")
-                    bot_response = model.transcribe(audio_path, language="en")
-                    bot_response = bot_response["text"]
-                    st.session_state['messages'].append(('Bot', bot_response))
+                            # The bucket on GCS in which to write the CSV file
+                            bucket = client.bucket(st.secrets["notebot"]["bucket_name"])
 
-                    # this is the transcripts directory to save the file to 
-
-                    category = "Transcripts"
+                            
+                            #-----------------------------------------------------------------------------------------------------
 
 
-                    save_note(category, topic_chosen, song_name, bot_response)
+                            # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
+                            # what is the filetype of the uploaded file and filename 
+                            uploaded_file_type = uploaded_file.name.split(".")[-1]
+                            uploaded_file_name = uploaded_file.name.split(".")[0]
+
+                            # this makes sure that requests are segregated by each user
+                            user_directory = f'Audio/'
+
+                            logging_filename = f"{uploaded_file_name}.mp3"
+                            full_file_path = f'{user_directory}{logging_filename}'
+
+                            # The name assigned to the CSV file on GCS
+                            blob = bucket.blob(full_file_path)
+                            # Upload the file
+                            blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
+
+                            # next upload a file with the metadata for this file
+
+                            metadata_df = pd.DataFrame()
+                            metadata_df["filename"] = uploaded_file.name
+                            metadata_df["filetype"] = uploaded_file.type
+                            metadata_df["Topic"] = topic_chosen
+
+                            # this makes sure that requests are segregated by each user
+                            user_directory = f'MetaData/'
+
+                            logging_filename = f"{uploaded_file_name}_metadata.csv"
+                            full_file_path = f'{user_directory}{logging_filename}'
+
+                            # The name assigned to the CSV file on GCS
+                            blob = bucket.blob(full_file_path)
+
+                            # Convert the DataFrame to a CSV string with a specified encoding
+                            csv_string = metadata_df.to_csv(index=False, encoding='utf-8')
+
+                            # Upload the CSV string to GCS
+                            blob.upload_from_string(csv_string, 'text/csv')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    # # Create a temporary file
+                    # with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1]) as temp_file:
+                    #     # Write the uploaded file content to the temporary file
+                    #     temp_file.write(uploaded_file.getbuffer())
+                    #     audio_path = temp_file.name  # Get the path to the temporary file
+                    # # audio_path = os.path.join(os.getcwd(), uploaded_file.name)
+                    # song_name = uploaded_file.name
+
+
+                    # st.session_state['messages'].append(('You', song_name))
+                    # st.markdown("beginning to process your link.")
+                    # bot_response = model.transcribe(audio_path, language="en")
+                    # bot_response = bot_response["text"]
+                    # st.session_state['messages'].append(('Bot', bot_response))
+
+                    # # this is the transcripts directory to save the file to 
+
+                    # category = "Transcripts"
+
+
+                    # save_note_cloud_version(category, topic_chosen, song_name, bot_response)
 
 
             # this is the processing for using a link from a website
@@ -481,7 +560,7 @@ if submit_button:
                         category = "Transcripts"
 
 
-                        save_note(category, topic_chosen, song_name, bot_response)
+                        save_note_cloud_version(category, topic_chosen, song_name, bot_response)
 
 
 
