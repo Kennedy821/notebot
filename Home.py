@@ -8,6 +8,20 @@ Created on Thu Apr  4 17:43:24 2024
 import streamlit as st
 from PIL import Image
 import jwt  # To generate and decode tokens
+
+# Loading Image using PIL
+
+
+
+im = Image.open('slug_logo.png')
+st.set_page_config(
+    page_title="Hello",
+    page_icon=im,
+    initial_sidebar_state="collapsed",
+    layout="wide"
+)
+
+
 SECRET_KEY = st.secrets["general"]["SECRET_KEY"]
 
 # Decode and verify JWT token
@@ -37,17 +51,7 @@ if token:
         
         st.success(f"Access granted! Welcome, {user_email}.")
         st.write(f"Your account: {user_email}")
-# Loading Image using PIL
 
-
-
-im = Image.open('slug_logo.png')
-st.set_page_config(
-    page_title="Hello",
-    page_icon=im,
-    initial_sidebar_state="collapsed",
-    layout="wide"
-)
 
 st.write(f"<h2 class='black-text'>  Welcome to Notebot - a simple notetaking app by Slug </h2>",unsafe_allow_html=True)
 
