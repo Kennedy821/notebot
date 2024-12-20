@@ -407,7 +407,7 @@ if submit_button:
                             uploaded_file_name = uploaded_file.name.split(".")[0]
 
                             # this makes sure that requests are segregated by each user
-                            user_directory = f'Audio/{topic_chosen}/'
+                            user_directory = f'users/{topic_chosen}/'
 
                             logging_filename = f"{uploaded_file_name}.mp3"
                             full_file_path = f'{user_directory}{logging_filename}'
