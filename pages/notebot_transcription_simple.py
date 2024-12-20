@@ -352,34 +352,36 @@ def check_for_topics():
 # save_note(category, topic, file_name, file_content)
 
 # Offer two options for the user either they can upload their own audio or they can use a link to a video
-processing_type = st.selectbox("Would you like to upload your own audio file or use a link to a video?", options=["","upload my own audio","use a link from a website"],key='type_of_input')
+processing_type = st.selectbox("Would you like to upload your own audio file or use a link to a video?", options=["","upload my own audio",
+                                                                                                                #   "use a link from a website"
+                                                                                                                  ],key='type_of_input')
 
 if processing_type == "upload my own audio":
-    uploaded_file = st.file_uploader("Choose a file", type=['mp3','wav','m4a','flac','aac','wma','ogg','opus','mp4','mkv','webm','mov','avi','wmv','flv','3gp','m4v','mpg','mpeg','m2v','m4v','mkv','flv','webm','vob','ogv','ogg','drc','gif','gifv','mng','avi','mov','qt','wmv','yuv','rm','rmvb','asf','amv','mp4','m4p','m4v','mpg','mp2','mpeg','mpe','mpv','mpg','mpeg','m2v','m4v','svi','3gp','3g2','mxf','roq','nsv','flv','f4v','f4p','f4a','f4b'])
+    uploaded_file = st.file_uploader("Choose a file", type=['mp3'])
 
 
-if processing_type == "use a link from a website":
+# if processing_type == "use a link from a website":
 
-# with st.form(key='chat_form'):
-    user_input = st.text_input("Enter the YouTube link of the song or playlist:", key='input')
+# # with st.form(key='chat_form'):
+#     user_input = st.text_input("Enter the YouTube link of the song or playlist:", key='input')
 
 # add an option for the user to be able to add a new topic or select from an existing topic
 
-topic_selection_options = st.selectbox("Do you want your transcript to be in a new topic or an existing one?", options=["","New","Existing"])
+# topic_selection_options = st.selectbox("Do you want your transcript to be in a new topic or an existing one?", options=["","New","Existing"])
 
-if topic_selection_options == "New":
+# if topic_selection_options == "New":
 
-    topic_chosen = st.text_input("Add a new topic here")
+#     topic_chosen = st.text_input("Add a new topic here")
 
 
-elif topic_selection_options == "Existing":
-    # check the existing directory of transcripts for this user:
+# elif topic_selection_options == "Existing":
+#     # check the existing directory of transcripts for this user:
 
-    existing_topics_list = check_for_topics()
-    existing_topics_list = [x for x in existing_topics_list if "." not in x]
-    existing_topics_list = [""] + existing_topics_list
+#     existing_topics_list = check_for_topics()
+#     existing_topics_list = [x for x in existing_topics_list if "." not in x]
+#     existing_topics_list = [""] + existing_topics_list
 
-    topic_chosen = st.selectbox("Select which existing topic you'd like to add your transcript to", options=existing_topics_list)
+#     topic_chosen = st.selectbox("Select which existing topic you'd like to add your transcript to", options=existing_topics_list)
 
 # this is the old working code that is being deprecated
 # |
