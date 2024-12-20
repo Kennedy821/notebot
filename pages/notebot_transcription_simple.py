@@ -472,7 +472,7 @@ if submit_button:
                             # this makes sure that requests are segregated by each user
                             user_directory = f'users/{user_hash}/'
 
-                            logging_filename = f"{uploaded_file_name}.mp3"
+                            logging_filename = f"{uploaded_file_name}_notebot_transcription.mp3"
                             full_file_path = f'{user_directory}{logging_filename}'
 
                             # The name assigned to the CSV file on GCS
