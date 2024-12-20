@@ -258,8 +258,7 @@ if st.button("Register"):
         # time.sleep(5)
         st.success("Registration successful!")
         st.markdown("To access your account make a payment using the 'Subscribe' button below")
-        st.markdown("\n After we've received your payment you will get a link to the PSIL application in your email.")
-        st.markdown("Happy listening!")
+        st.markdown("\n After we've received your payment you will get a link to the Notebot application in your email.")
 
         # # Redirect to external site with the token as a query parameter
         # redirect_url = f"https://psilproject.streamlit.app/psil_login"

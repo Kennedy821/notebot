@@ -10,6 +10,7 @@ import tempfile
 
 print(jwt.__version__)
 SECRET_KEY = st.secrets["general"]["SECRET_KEY"]
+bucket_name = st.secrets["gcp_bucket"]["application_bucket"]
 
 im = Image.open('slug_logo.png')
 st.set_page_config(
@@ -103,7 +104,7 @@ if st.button("Login"):
 
 
                 # The bucket on GCS in which to write the CSV file
-                bucket = client.bucket('notebot-backend-2')
+                bucket = client.bucket(bucket_name)
                 # The name assigned to the CSV file on GCS
                 blob = bucket.blob('user_login_request.csv')
 
@@ -138,7 +139,7 @@ if st.button("Login"):
                     st.write("redirecting you to our registration page...")
                     time.sleep(10)
 
-                    redirect_url = f"https://psilproject.streamlit.app/psil_registration_form"
+                    redirect_url = f"https://notebot.streamlit.app/notebot_registration_form"
                     st.markdown(f"""
                     <meta http-equiv="refresh" content="0; url={redirect_url}">
                     """, unsafe_allow_html=True)
