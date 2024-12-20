@@ -498,7 +498,7 @@ if submit_button:
                                 st.download_button(
                                     label="Download Transcription",
                                     data=csv,
-                                    file_name="transcription.csv",
+                                    file_name="{uploaded_file_name}",
                                     mime="text/csv",
                                 )
 
