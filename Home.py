@@ -7,6 +7,36 @@ Created on Thu Apr  4 17:43:24 2024
 
 import streamlit as st
 from PIL import Image
+import jwt  # To generate and decode tokens
+SECRET_KEY = st.secrets["general"]["SECRET_KEY"]
+
+# Decode and verify JWT token
+def verify_token(token):
+    try:
+        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        return decoded_token
+    except jwt.InvalidTokenError:
+        return None
+
+
+# Here is the new code to get the query parameters
+
+query_params = st.query_params.get("token")
+
+token = st.query_params.token
+if token:
+    # decoded_token = verify_token(token)
+
+
+# if 'token' in query_params:
+#     token = query_params.get('token')[0]  # Get the token from the query
+    decoded_token = verify_token(token)
+
+    if decoded_token:
+        user_email = str(decoded_token).split(":")[1].split("'")[1]
+        
+        st.success(f"Access granted! Welcome, {user_email}.")
+        st.write(f"Your account: {user_email}")
 # Loading Image using PIL
 
 
@@ -52,9 +82,9 @@ st.markdown(hide_default_format, unsafe_allow_html=True)
 # Define the sections
 
 sections = [
-    {"image": "slug_logo.png", "label": "Section 1", "url": "https://notebot.streamlit.app/notebot_download_and_process_ydl"},
-    {"image": "slug_logo.png", "label": "Section 2", "url": "https://notebot.streamlit.app/notebot_generate_notes"},
-    {"image": "slug_logo.png", "label": "Section 3", "url": "https://notebot.streamlit.app/notebot_study_multiselect"},
+    {"image": "slug_logo.png", "label": "Section 1", "url": f"https://notebot.streamlit.app/notebot_download_and_process_ydl/?token={token}"},
+    {"image": "slug_logo.png", "label": "Section 2", "url": "https://notebot.streamlit.app/notebot_generate_notes/?token={token}"},
+    {"image": "slug_logo.png", "label": "Section 3", "url": "https://notebot.streamlit.app/notebot_study_multiselect/?token={token}"},
 ]
 
 
