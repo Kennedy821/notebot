@@ -14,10 +14,11 @@ formatted_date = current_date.strftime("%d-%m-%Y")
 simple_date = str(current_date).split(' ')[0]
 
 SECRET_KEY = st.secrets["general"]["SECRET_KEY"]
+bucket_name = st.secrets["gcp_bucket"]["application_bucket"]
 
 im = Image.open('slug_logo.png')
 st.set_page_config(
-    page_title="PSIL",
+    page_title="Notebot",
     page_icon=im,
     initial_sidebar_state="collapsed",
     ) 
@@ -154,9 +155,9 @@ if st.button("Register"):
 
 
         # The bucket on GCS in which to write the CSV file
-        bucket = client.bucket('psil-app-backend-2')
+        bucket = client.bucket(bucket_name)
         # The name assigned to the CSV file on GCS
-        blob = bucket.blob('new_psil_user_registration.csv')
+        blob = bucket.blob('new_notebot_user_registration.csv')
 
         # Convert the DataFrame to a CSV string with a specified encoding
         csv_string = credentials_df.to_csv(index=False, encoding='utf-8')
