@@ -92,13 +92,13 @@ if password and confirm_password:
 # add all the paypal processing here
 # this section will handle the paypal payments
 
-import paypalrestsdk
+# import paypalrestsdk
 
-paypalrestsdk.configure({
-"mode": "sandbox",  # Use "live" for production
-"client_id": st.secrets["paypal"]["PAYPAL_CLIENT"],
-"client_secret": st.secrets["paypal"]["PAYPAL_CLIENT_SECRET"]
-})
+# paypalrestsdk.configure({
+# "mode": "sandbox",  # Use "live" for production
+# "client_id": st.secrets["paypal"]["PAYPAL_CLIENT"],
+# "client_secret": st.secrets["paypal"]["PAYPAL_CLIENT_SECRET"]
+# })
 # ---deprecated code below 
 # # Get query parameters to check if the user is returning from PayPal
 # params = st.experimental_get_query_params()
