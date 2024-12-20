@@ -38,6 +38,10 @@ def verify_token(token):
 query_params = st.query_params.get("token")
 
 token = st.query_params.token
+
+# Set token after login
+st.session_state['token'] = token
+
 if token:
     # decoded_token = verify_token(token)
 

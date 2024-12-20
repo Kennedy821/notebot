@@ -19,6 +19,9 @@ st.set_page_config(
     page_icon=im,
 )
 
+# Access token in another page
+token = st.session_state.get('token', None)
+
 SECRET_KEY = st.secrets["general"]["SECRET_KEY"]
 
 # Decode and verify JWT token
@@ -28,13 +31,7 @@ def verify_token(token):
         return decoded_token
     except jwt.InvalidTokenError:
         return None
-
-
-# Here is the new code to get the query parameters
-
-query_params = st.query_params.get("token")
-
-token = st.query_params.token
+    
 if token:
     # decoded_token = verify_token(token)
 
@@ -47,7 +44,7 @@ if token:
         user_email = str(decoded_token).split(":")[1].split("'")[1]
         
         st.success(f"Access granted! Welcome, {user_email}.")
-        st.write(f"Your account: {user_email}")
+        st.write(f"Your account: {user_email}")    
 # the code below will be deleted as the transcription will be handled on the backend
 # ----------------------------------------------------------------------------------
 
