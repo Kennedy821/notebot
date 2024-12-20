@@ -19,8 +19,17 @@ st.set_page_config(
     page_icon=im,
 )
 
-# Access token in another page
-token = st.session_state.get('token', None)
+
+# Check for token in session state
+if "token" not in st.session_state:
+    st.error("Unauthorized access. Please log in from the Home page.")
+    st.stop()
+
+token = st.session_state["token"]
+
+
+# # Access token in another page
+# token = st.session_state.get('token', None)
 
 SECRET_KEY = st.secrets["general"]["SECRET_KEY"]
 
