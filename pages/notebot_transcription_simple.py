@@ -12,6 +12,31 @@ import tempfile
 from google.oauth2 import service_account
 from google.cloud import storage
 import jwt
+import time
+
+def get_transcription_from_gcs(user_hash):
+
+    start_time = time.time()
+    
+    
+    while True:
+
+
+
+        #download the indices from gcs
+        blob = bucket.blob(f"users/{user_hash}/transcription_successful.csv")
+        if blob.exists():
+
+            # Download the file to a destination
+            blob.download_to_filename(temp_dir+"transcription_successful.csv")
+            downloaded_indices_df = pd.read_csv(temp_dir+"transcription_successful.csv")
+            # st.dataframe(downloaded_indices_df)
+            break
+        else:
+            time.sleep(10)
+    end_time = time.time()
+    st.write(f"Time taken to get recommendations is: {end_time-start_time}")
+    return downloaded_indices_df
 
 im = Image.open('slug_logo.png') # slug_logo.png is the image file in the same directory as the script
 st.set_page_config(
@@ -53,6 +78,8 @@ if token:
         
         st.success(f"Access granted! Welcome, {user_email}.")
         st.write(f"Your account: {user_email}")
+
+user_hash = token
 # the code below will be deleted as the transcription will be handled on the backend
 # ----------------------------------------------------------------------------------
 
@@ -441,7 +468,7 @@ if submit_button:
                             uploaded_file_name = uploaded_file.name.split(".")[0]
 
                             # this makes sure that requests are segregated by each user
-                            user_directory = f'users/{topic_chosen}/'
+                            user_directory = f'users/{user_hash}/'
 
                             logging_filename = f"{uploaded_file_name}.mp3"
                             full_file_path = f'{user_directory}{logging_filename}'
@@ -451,33 +478,27 @@ if submit_button:
                             # Upload the file
                             blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
 
-                            # next upload a file with the metadata for this file
 
-                            metadata_df = pd.DataFrame([uploaded_file.name])
-                            metadata_df.columns = ["filename"]
-                            metadata_df["filetype"] = uploaded_file_type
-                            metadata_df["Topic"] = topic_chosen
 
-                            # this makes sure that requests are segregated by each user
-                            user_directory = f'MetaData/{topic_chosen}/'
-
-                            logging_filename = f"{uploaded_file_name}_metadata.csv"
-                            full_file_path = f'{user_directory}{logging_filename}'
-
-                            # The name assigned to the CSV file on GCS
-                            blob = bucket.blob(full_file_path)
-
-                            # Convert the DataFrame to a CSV string with a specified encoding
-                            csv_string = metadata_df.to_csv(index=False, encoding='utf-8')
-
-                            # Upload the CSV string to GCS
-                            blob.upload_from_string(csv_string, 'text/csv')
-
+                            # now you need to check in the users bucket for the transcribed file
 
 
                             st.success("Successfully uploaded your audio file!")
 
 
+
+                            with tempfile.TemporaryDirectory() as temp_dir:
+
+                                results_df = get_transcription_from_gcs(user_hash)
+
+                                # convert string to downloadable csv from streamlit with download button
+                                csv = results_df.to_csv(index=False)
+                                st.download_button(
+                                    label="Download Transcription",
+                                    data=csv,
+                                    file_name="transcription.csv",
+                                    mime="text/csv",
+                                )
 
 
 
