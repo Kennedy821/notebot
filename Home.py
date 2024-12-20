@@ -86,7 +86,7 @@ st.markdown(hide_default_format, unsafe_allow_html=True)
 # Define the sections
 
 sections = [
-    {"image": "slug_logo.png", "label": "Section 1", "url": f"https://notebot.streamlit.app/notebot_download_and_process_ydl/?token={token}"},
+    {"image": "slug_logo.png", "label": "Section 1", "url": f"https://notebot.streamlit.app/notebot_transcription_simple/?token={token}"},
     {"image": "slug_logo.png", "label": "Section 2", "url": "https://notebot.streamlit.app/notebot_generate_notes/?token={token}"},
     {"image": "slug_logo.png", "label": "Section 3", "url": "https://notebot.streamlit.app/notebot_study_multiselect/?token={token}"},
 ]
