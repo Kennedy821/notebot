@@ -21,3 +21,4 @@ pathlib
 st-files-connection
 pyjwt==2.9.0
 yt-dlp
+beautifulsoup4
