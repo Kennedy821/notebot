@@ -31,7 +31,7 @@ from google.cloud import storage
 import jwt
 import time
 import tempfile
-# from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 
 im = Image.open('slug_logo.png')
 st.set_page_config(
