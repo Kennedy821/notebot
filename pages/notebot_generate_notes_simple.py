@@ -962,16 +962,16 @@ if submit_button and uploaded_file:
                 # st.success("Your high level summary has been generated")
                 # st.markdown(f"{add_newline_before_bold(gpt_4_prompt_response)}")
 
-            modified_gpt_4_prompt_response = sanitize_html(summary_notes_string)
+            modified_gpt_4_prompt_response = sanitize_html_2(summary_notes_string)
 
 
             # Convert Markdown to HTML
             html_text = markdown2.markdown(modified_gpt_4_prompt_response)
 
 
-            save_summary_notes(category="Summary Notes", topic=topic_chosen, file_name=uploaded_file_name, file_content=html_text)
+            # save_summary_notes(category="Summary Notes", topic=topic_chosen, file_name=uploaded_file_name, file_content=html_text)
 
-            st.success("Your summary notes have been saved as a pdf!")
+            # st.success("Your summary notes have been saved as a pdf!")
 
             # Create PDF from the HTML text
             pdf_buffer = create_pdf(html_text)
