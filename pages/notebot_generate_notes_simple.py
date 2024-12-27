@@ -28,6 +28,7 @@ from PIL import Image
 from fuzzywuzzy import fuzz
 from google.oauth2 import service_account
 from google.cloud import storage
+import jwt
 
 im = Image.open('slug_logo.png')
 st.set_page_config(
