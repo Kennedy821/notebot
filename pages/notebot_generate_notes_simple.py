@@ -29,6 +29,7 @@ from fuzzywuzzy import fuzz
 from google.oauth2 import service_account
 from google.cloud import storage
 import jwt
+import time
 # from bs4 import BeautifulSoup
 
 im = Image.open('slug_logo.png')
