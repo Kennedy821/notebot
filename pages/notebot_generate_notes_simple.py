@@ -29,7 +29,7 @@ from fuzzywuzzy import fuzz
 from google.oauth2 import service_account
 from google.cloud import storage
 
-im = Image.open('/Users/tariromashongamhende/Downloads/slug_logo.png')
+im = Image.open('slug_logo.png')
 st.set_page_config(
     page_title="Hello",
     page_icon=im,
