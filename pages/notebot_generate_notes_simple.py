@@ -738,7 +738,7 @@ if submit_button and uploaded_file:
     # this makes sure that requests are segregated by each user
     user_directory = f'users/{user_hash}/'
 
-    logging_filename = f"{uploaded_file_name}_notebot_transcription.mp3"
+    logging_filename = f"{uploaded_file_name}_notebot_note_generation.pdf"
     full_file_path = f'{user_directory}{logging_filename}'
 
 
