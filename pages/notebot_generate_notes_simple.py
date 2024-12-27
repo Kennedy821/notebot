@@ -30,6 +30,7 @@ from google.oauth2 import service_account
 from google.cloud import storage
 import jwt
 import time
+import tempfile
 # from bs4 import BeautifulSoup
 
 im = Image.open('slug_logo.png')
@@ -831,7 +832,9 @@ if submit_button and uploaded_file:
 
 
         # check the backend for the detailed notes 
-        detailed_notes_string = get_detailed_notes_from_gcs(user_hash)
+        with tempfile.TemporaryDirectory() as temp_dir:
+
+            detailed_notes_string = get_detailed_notes_from_gcs(user_hash)
 
         if len(detailed_notes_string)>0:
             with st.expander("Here are your detailed notes"):
@@ -944,7 +947,9 @@ if submit_button and uploaded_file:
 
             # st.markdown(len(combined_initial_notes_string))
             # check the backend for the detailed notes 
-        summary_notes_string = get_summary_notes_from_gcs(user_hash)
+        with tempfile.TemporaryDirectory() as temp_dir:
+
+            summary_notes_string = get_summary_notes_from_gcs(user_hash)
         with st.expander("Here is your high level summary"):
             st.markdown(summary_notes_string)
                 # the code below will be deprecated and will work by receiving a file from backend loading that file and displaying the detailed notes
