@@ -29,6 +29,7 @@ from fuzzywuzzy import fuzz
 from google.oauth2 import service_account
 from google.cloud import storage
 import jwt
+# from bs4 import BeautifulSoup
 
 im = Image.open('slug_logo.png')
 st.set_page_config(
@@ -386,7 +387,6 @@ def get_random_chunks(s, chunk_size=40000, num_chunks=3):
     
     return chunks
 
-from bs4 import BeautifulSoup
 
 def sanitize_html(html_text):
     soup = BeautifulSoup(html_text, 'html.parser')
