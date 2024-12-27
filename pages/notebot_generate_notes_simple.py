@@ -13,7 +13,7 @@ import openai
 from openai import OpenAI
 import os
 import tiktoken
-import moviepy.editor as mp
+# import moviepy.editor as mp
 import re
 import random
 import fitz  # PyMuPDF
