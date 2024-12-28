@@ -42,6 +42,8 @@ im = Image.open('slug_logo.png') # slug_logo.png is the image file in the same d
 st.set_page_config(
     page_title="Hello",
     page_icon=im,
+    initial_sidebar_state="collapsed"
+
 )
 
 
