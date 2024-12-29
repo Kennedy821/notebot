@@ -488,6 +488,9 @@ if submit_button:
 
 
                             st.success("Successfully uploaded your audio file!")
+                            
+                            # add in a timing delay to make sure that the file is uploaded before the next step
+                            time.sleep(20)
 
 
 
