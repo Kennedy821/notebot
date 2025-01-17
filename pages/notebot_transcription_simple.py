@@ -518,10 +518,103 @@ if submit_button:
                                 )
 
 
+# ----------------------------------------------------------------------------------
+# this section of the code now allows or bulk uploads to the backend
+# ----------------------------------------------------------------------------------
+
+                if upload_type=="bulk" and uploaded_files is not None:
+
+                    # check the files in the uploaded files are a valid file type
+                    for object in uploaded_files:
+                        if object.type != "audio/mpeg":
+                            st.error("Invalid file type. Please upload a valid MP3 file.")
+                            st.stop()
+                        else:
+                            pass
 
 
 
+                            # get the details for where the uploaded file is going to go
+                            #-----------------------------------------------------------------------------------------------------
 
+                            # Create credentials object
+                            credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+
+                            # Use the credentials to create a client
+                            client = storage.Client(credentials=credentials)
+
+
+                            # The bucket on GCS in which to write the CSV file
+                            bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
+
+                            
+                            #-----------------------------------------------------------------------------------------------------
+
+                            # for each of the uploaded files, upload them to the backend
+                            number_of_files = len(uploaded_files)
+                            for object_num in range(len(uploaded_files)):
+                                if object_num != number_of_files:
+                                    uploaded_file = uploaded_files[object_num]
+
+                                    # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
+                                    # what is the filetype of the uploaded file and filename 
+                                    uploaded_file_type = uploaded_file.name.split(".")[-1]
+                                    uploaded_file_name = uploaded_file.name.split(".")[0]
+
+                                    # this makes sure that requests are segregated by each user
+                                    user_directory = f'users/{user_hash}/'
+
+                                    logging_filename = f"{uploaded_file_name}_bulk_upload_object_{object_num}_notebot_transcription.mp3"
+                                    full_file_path = f'{user_directory}{logging_filename}'
+
+                                    # The name assigned to the CSV file on GCS
+                                    blob = bucket.blob(full_file_path)
+                                    # Upload the file
+                                    blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
+                                # for the last file in the list we will flag that it is the final file as this will be the last file to be uploaded
+                                else:
+                                    uploaded_file = uploaded_files[object_num]
+
+                                    # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
+                                    # what is the filetype of the uploaded file and filename 
+                                    uploaded_file_type = uploaded_file.name.split(".")[-1]
+                                    uploaded_file_name = uploaded_file.name.split(".")[0]
+
+                                    # this makes sure that requests are segregated by each user
+                                    user_directory = f'users/{user_hash}/'
+
+                                    logging_filename = f"{uploaded_file_name}_bulk_upload_object_{object_num}_final_notebot_transcription.mp3"
+                                    full_file_path = f'{user_directory}{logging_filename}'
+
+                                    # The name assigned to the CSV file on GCS
+                                    blob = bucket.blob(full_file_path)
+                                    # Upload the file
+                                    blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
+
+
+
+                            # now you need to check in the users bucket for the transcribed file
+
+
+                            st.success("Successfully uploaded your audio file!")
+                            
+                            # add in a timing delay to make sure that the file is uploaded before the next step
+                            time.sleep(20)
+
+
+
+                            with tempfile.TemporaryDirectory() as temp_dir:
+
+                                results_df = get_transcription_from_gcs(user_hash)
+
+                                # convert string to downloadable csv from streamlit with download button
+                                csv = results_df.to_csv(index=False)
+                                st.download_button(
+                                    label="Download Transcription",
+                                    data=csv,
+                                    file_name=f"{uploaded_file_name}",
+                                    mime="text/csv",
+                                )
 
 
 
