@@ -413,7 +413,7 @@ if processing_type == "upload my own audio":
 # if len(topic_chosen)>4:
 
 
-
+completed_status = False
 
 # Define the CSS for the dark brown button
 submit_button = """
@@ -522,7 +522,7 @@ if submit_button:
 # this section of the code now allows or bulk uploads to the backend
 # ----------------------------------------------------------------------------------
 
-                if upload_type=="bulk" and uploaded_files is not None:
+                if upload_type=="bulk" and uploaded_files is not None and completed_status == False:
 
                     # check the files in the uploaded files are a valid file type
                     for object in uploaded_files:
@@ -618,7 +618,9 @@ if submit_button:
                                     file_name=f"bulk_transcription_job.csv",
                                     mime="text/csv",
                                 )
+                                completed_status = True
 
+                                st.success("Successfully processed your bulk audio files!")
 
 
                     # # Create a temporary file
