@@ -356,12 +356,12 @@ def check_for_topics():
 # Offer two options for the user either they can upload their own audio or they can use a link to a video
 processing_type = st.selectbox("Would you like to upload your own audio file or use a link to a video?", options=["","upload my own audio",
                                                                                                                 #   "use a link from a website"
-                                                                                                                  ],key='type_of_input')
+                                                                                                                  ])
 
 if processing_type == "upload my own audio":
 
 
-    upload_type = st.selectbox("Would you like to upload a single file or many files?", options=["","single file","bulk"],key='single_or_many_files')
+    upload_type = st.selectbox("Would you like to upload a single file or many files?", options=["","single file","bulk"])
 
     if upload_type=="single file":
         uploaded_file = st.file_uploader("Choose a file", type=['mp3'], allow_multiple_files=False,key='file_uploader')
