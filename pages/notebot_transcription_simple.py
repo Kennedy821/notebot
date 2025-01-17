@@ -359,7 +359,17 @@ processing_type = st.selectbox("Would you like to upload your own audio file or 
                                                                                                                   ],key='type_of_input')
 
 if processing_type == "upload my own audio":
-    uploaded_file = st.file_uploader("Choose a file", type=['mp3'])
+
+
+    upload_type = st.selectbox("Would you like to upload a single file or many files?", options=["","single file","bulk"],key='single_or_many_files')
+
+    if upload_type=="single file":
+        uploaded_file = st.file_uploader("Choose a file", type=['mp3'], allow_multiple_files=False,key='file_uploader')
+    elif upload_type=="bulk":
+        uploaded_files = st.file_uploader("Choose a file", type=['mp3'], allow_multiple_files=True,key='file_uploader')
+        for uploaded_file in uploaded_files:
+            if uploaded_file is not None:
+                st.write(uploaded_file.name)
 
 
 # if processing_type == "use a link from a website":
@@ -436,7 +446,7 @@ if submit_button:
             # this is the processing for uploading your own audio
 
             if processing_type == "upload my own audio":
-                if uploaded_file is not None:
+                if upload_type=="single file" and uploaded_file is not None:
 
                     # check the file is a valid file type
 
