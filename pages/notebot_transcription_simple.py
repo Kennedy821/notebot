@@ -516,6 +516,7 @@ if submit_button:
                                     file_name=f"{uploaded_file_name}.csv",
                                     mime="text/csv",
                                 )
+                                st.stop()
 
 
 # ----------------------------------------------------------------------------------
