@@ -623,6 +623,8 @@ if submit_button:
 
                                 st.success("Successfully processed your bulk audio files!")
 
+                                st.stop()
+
 
                     # # Create a temporary file
                     # with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1]) as temp_file:
