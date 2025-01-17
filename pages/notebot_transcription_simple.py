@@ -513,7 +513,7 @@ if submit_button:
                                 st.download_button(
                                     label="Download Transcription",
                                     data=csv,
-                                    file_name=f"{uploaded_file_name}",
+                                    file_name=f"{uploaded_file_name}.csv",
                                     mime="text/csv",
                                 )
 
@@ -612,7 +612,7 @@ if submit_button:
                                 st.download_button(
                                     label="Download Transcription",
                                     data=csv,
-                                    file_name=f"{uploaded_file_name}",
+                                    file_name=f"{uploaded_file_name}.csv",
                                     mime="text/csv",
                                 )
 
