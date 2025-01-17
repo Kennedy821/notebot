@@ -552,7 +552,7 @@ if submit_button:
 
                             # for each of the uploaded files, upload them to the backend
                             number_of_files = len(uploaded_files)
-                            for object_num in range(len(uploaded_files)):
+                            for object_num in range(1,len(uploaded_files)):
                                 if object_num != number_of_files:
                                     uploaded_file = uploaded_files[object_num]
 
