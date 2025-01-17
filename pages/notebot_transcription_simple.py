@@ -615,7 +615,7 @@ if submit_button:
                                 st.download_button(
                                     label="Download Transcription",
                                     data=csv,
-                                    file_name=f"{uploaded_file_name}.csv",
+                                    file_name=f"bulk_transcription_job.csv",
                                     mime="text/csv",
                                 )
 
