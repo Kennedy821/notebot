@@ -555,6 +555,7 @@ if submit_button:
                             for object_num in range(1,len(uploaded_files)):
                                 if object_num != number_of_files:
                                     uploaded_file = uploaded_files[object_num]
+                                    print(f"this is not the last file: {uploaded_file}")
 
                                     # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
                                     # what is the filetype of the uploaded file and filename 
@@ -573,7 +574,9 @@ if submit_button:
                                     blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
                                 # for the last file in the list we will flag that it is the final file as this will be the last file to be uploaded
                                 else:
+
                                     uploaded_file = uploaded_files[object_num]
+                                    print(f"this is the last file: {uploaded_file}")
 
                                     # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
                                     # what is the filetype of the uploaded file and filename 
