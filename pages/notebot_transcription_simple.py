@@ -364,9 +364,9 @@ if processing_type == "upload my own audio":
     upload_type = st.selectbox("Would you like to upload a single file or many files?", options=["","single file","bulk"])
 
     if upload_type=="single file":
-        uploaded_file = st.file_uploader("Choose a file", type=['mp3'], allow_multiple_files=False)
+        uploaded_file = st.file_uploader("Choose a file", type=['mp3'], accept_multiple_files=False)
     elif upload_type=="bulk":
-        uploaded_files = st.file_uploader("Choose a file", type=['mp3'], allow_multiple_files=True)
+        uploaded_files = st.file_uploader("Choose a file", type=['mp3'], accept_multiple_files=True)
         for uploaded_file in uploaded_files:
             if uploaded_file is not None:
                 st.write(uploaded_file.name)
