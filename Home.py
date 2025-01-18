@@ -109,7 +109,7 @@ for idx, section in enumerate(sections):
 
         # Make the image clickable
 
-        if st.button(f"Go to {section['label']}", key=f"btn_{idx}", use_container_width=True):
+        if st.button(f"Go to **{section['label']}**", key=f"btn_{idx}", use_container_width=True):
             # st.experimental_set_query_params(page=section["url"])
 
             redirect_url = f"{section["url"]}"
