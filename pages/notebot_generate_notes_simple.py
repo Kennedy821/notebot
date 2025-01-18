@@ -663,7 +663,7 @@ div.stFileUploader label:hover {
 """
 
 # Inject the CSS into the Streamlit app
-st.markdown(file_uploader_css, unsafe_allow_html=True)
+# st.markdown(file_uploader_css, unsafe_allow_html=True)
 
 # Create the file uploader using Streamlit's file_uploader function
 uploaded_file = st.file_uploader("", type=[ 'pdf'])
