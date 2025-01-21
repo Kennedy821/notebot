@@ -369,7 +369,8 @@ if processing_type == "upload my own audio":
         uploaded_files = st.file_uploader("Choose a file", type=['mp3'], accept_multiple_files=True)
         for uploaded_file in uploaded_files:
             if uploaded_file is not None:
-                st.write(uploaded_file.name)
+                # st.write(uploaded_file.name)
+                pass
 
 
 # if processing_type == "use a link from a website":
