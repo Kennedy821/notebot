@@ -444,6 +444,32 @@ if submit_button:
         
         with st.spinner("Processing your transcription"):
 
+            
+            
+            # Create credentials object
+            credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+
+            # Use the credentials to create a client
+            client = storage.Client(credentials=credentials)
+
+
+            # The bucket on GCS in which to write the CSV file
+            bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
+
+
+            # delete any previous transcriptions for this user
+
+
+            def delete_csv_file(bucket_name, file_name):
+                storage_client = storage.Client()
+                bucket = storage_client.bucket(bucket_name)
+                blob = bucket.blob(file_name)
+
+            try:
+                delete_csv_file(bucket,"transcription_successful.csv")
+            except Exception as e:
+                print(f"{e} file does not exist proceeding to upload new file")
+
             # this is the processing for uploading your own audio
 
             if processing_type == "upload my own audio":
