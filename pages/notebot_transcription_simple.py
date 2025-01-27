@@ -470,6 +470,11 @@ if submit_button:
             except Exception as e:
                 print(f"{e} file does not exist proceeding to upload new file")
 
+
+            time.sleep(3)
+
+            
+
             # this is the processing for uploading your own audio
 
             if processing_type == "upload my own audio":
