@@ -226,6 +226,92 @@ def generate_combined_prompt_iterative(user_prompt, input_string,lower_bound_val
     
     return user_prompt,system_role_context
 
+# adding in a new function to see how o1 models perform
+
+def get_o3_response(prompt, input_string, lower_string_chunk_value, upper_string_chunk_value):
+    """
+    Send a prompt to the OpenAI API to get a response from GPT-4.
+
+    Parameters:
+    prompt (str): The prompt to send to GPT-4.
+
+    Returns:
+    str: The response from GPT-4.
+    """
+
+    chosen_model = "o3-mini"
+    # chosen_model = "gpt-4o-2024-08-06"
+    # chosen_model = "gpt-4o-mini"
+    
+    # user_prompt, system_role_prompt = generate_combined_prompt(prompt)
+    user_prompt, system_role_prompt = generate_combined_prompt_iterative(prompt,input_string,lower_string_chunk_value,upper_string_chunk_value)
+
+    combined_prompt =  system_role_prompt + user_prompt
+
+    # Load the tokenizer
+    tokenizer = tiktoken.get_encoding("cl100k_base")
+    
+    def count_tokens(text):
+        tokens = tokenizer.encode(text)
+        return len(tokens)
+
+    num_tokens = count_tokens(system_role_prompt)
+    print(f"Number of system role tokens: {num_tokens}")
+    
+    response = client.chat.completions.create(
+      model=chosen_model,
+      messages=[
+        {"role": "system", "content": f"""{combined_prompt}"""},
+      ]
+    )
+    return response.choices[0].message.content
+
+
+
+# adding in a new function to see how o1 models perform
+
+def get_o1_response(prompt, input_string, lower_string_chunk_value, upper_string_chunk_value):
+    """
+    Send a prompt to the OpenAI API to get a response from GPT-4.
+
+    Parameters:
+    prompt (str): The prompt to send to GPT-4.
+
+    Returns:
+    str: The response from GPT-4.
+    """
+
+    chosen_model = "o1-mini"
+    # chosen_model = "gpt-4o-2024-08-06"
+    # chosen_model = "gpt-4o-mini"
+    
+    # user_prompt, system_role_prompt = generate_combined_prompt(prompt)
+    user_prompt, system_role_prompt = generate_combined_prompt_iterative(prompt,input_string,lower_string_chunk_value,upper_string_chunk_value)
+
+    combined_prompt =  system_role_prompt + user_prompt
+
+    # Load the tokenizer
+    tokenizer = tiktoken.get_encoding("cl100k_base")
+    
+    def count_tokens(text):
+        tokens = tokenizer.encode(text)
+        return len(tokens)
+
+    num_tokens = count_tokens(system_role_prompt)
+    print(f"Number of system role tokens: {num_tokens}")
+    
+    response = client.chat.completions.create(
+      model=chosen_model,
+      messages=[
+        {"role": "system", "content": f"""{combined_prompt}"""},
+      ]
+    )
+    return response.choices[0].message.content
+
+
+
+
+
 def get_gpt4_response(prompt, input_string, lower_string_chunk_value, upper_string_chunk_value):
     """
     Send a prompt to the OpenAI API to get a response from GPT-4.
@@ -609,7 +695,7 @@ if uploaded_files:
 
                 # st.markdown(input_lecture_notes[lower_bound:upper_bound])
                 if len(input_lecture_notes[lower_bound:upper_bound])>300:
-                    gpt_4_prompt_response = get_gpt4_response("Help me understand what was in the lecture I just had?", input_lecture_notes,lower_bound, upper_bound)
+                    gpt_4_prompt_response = get_o1_response("Help me understand what was in the lecture I just had?", input_lecture_notes,lower_bound, upper_bound)
                     gpt_4_prompt_response = '\n'.join(gpt_4_prompt_response.split('\n')[1:])
                     gpt_4_prompt_response = gpt_4_prompt_response.replace("Question:","\nQuestion:").replace("Evidence:","\nEvidence:").replace("Answer:","\nAnswer:")
                     # st.markdown('\n'.join(gpt_4_prompt_response.split('\n')[1:]))
@@ -705,7 +791,7 @@ if uploaded_files:
 
                 for i in range(len(note_string_chunks)):
                     
-                    gpt_4_prompt_response = get_gpt4_response_hidden("Help me understand what was in the lecture I just had?",note_string_chunks[i])
+                    gpt_4_prompt_response = get_o1_response("Help me understand what was in the lecture I just had?",note_string_chunks[i])
                     bag_of_model_result_chunks.append(gpt_4_prompt_response)
                     print(f"finished processing chunk {i}")
                     
@@ -722,7 +808,7 @@ if uploaded_files:
             # st.markdown(len(combined_initial_notes_string))
             
             with st.expander("Here is your high level summary"):
-                gpt_4_prompt_response = get_gpt4_response_final("Help me understand what was in the lecture I just had?", combined_initial_notes_string)
+                gpt_4_prompt_response = get_o1_response("Help me understand what was in the lecture I just had?", combined_initial_notes_string)
                 st.success("Your high level summary has been generated")
                 st.markdown(f"{add_newline_before_bold(gpt_4_prompt_response)}")
 
