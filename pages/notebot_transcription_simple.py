@@ -464,9 +464,10 @@ if submit_button:
                     storage_client = storage.Client()
                     bucket = storage_client.bucket(bucket_name)
                     blob = bucket.blob(file_name)
+                    blob.delete()
 
                 try:
-                    delete_csv_file(bucket,"transcription_successful.csv")
+                    delete_csv_file(bucket,f"users/{user_hash}/transcription_successful.csv")
                 except Exception as e:
                     print(f"{e} file does not exist proceeding to upload new file")
             except Exception as ne:
