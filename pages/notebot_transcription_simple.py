@@ -454,7 +454,9 @@ if submit_button:
 
 
                 # The bucket on GCS in which to write the CSV file
-                bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
+                bucket_name = st.secrets["gcp_bucket"]["application_bucket"]
+
+                bucket = client.bucket(bucket_name)
 
 
                 # delete any previous transcriptions for this user
@@ -467,7 +469,7 @@ if submit_button:
                     blob.delete()
 
                 try:
-                    delete_csv_file(bucket,f"users/{user_hash}/transcription_successful.csv")
+                    delete_csv_file(bucket_name,f"users/{user_hash}/transcription_successful.csv")
                 except Exception as e:
                     print(f"{e} file does not exist proceeding to upload new file")
             except Exception as ne:
