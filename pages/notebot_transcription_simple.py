@@ -609,6 +609,8 @@ if submit_button:
                                 # The name assigned to the CSV file on GCS
                                 blob = bucket.blob(full_file_path)
                                 # Upload the file
+                                uploaded_file.seek(0)
+
                                 blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
                             # for the last file in the list we will flag that it is the final file as this will be the last file to be uploaded
                             else:
@@ -630,6 +632,7 @@ if submit_button:
                                 # The name assigned to the CSV file on GCS
                                 blob = bucket.blob(full_file_path)
                                 # Upload the file
+                                uploaded_file.seek(0)
                                 blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
 
 
