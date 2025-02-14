@@ -647,21 +647,21 @@ if submit_button:
 
 
 
-                        with tempfile.TemporaryDirectory() as temp_dir:
+                with tempfile.TemporaryDirectory() as temp_dir:
 
-                            results_df = get_transcription_from_gcs(user_hash)
+                    results_df = get_transcription_from_gcs(user_hash)
 
-                            # convert string to downloadable csv from streamlit with download button
-                            csv = results_df.to_csv(index=False)
-                            st.download_button(
-                                label="Download Transcription",
-                                data=csv,
-                                file_name=f"bulk_transcription_job.csv",
-                                mime="text/csv",
-                            )
-                            completed_status = True
+                    # convert string to downloadable csv from streamlit with download button
+                    csv = results_df.to_csv(index=False)
+                    st.download_button(
+                        label="Download Transcription",
+                        data=csv,
+                        file_name=f"bulk_transcription_job.csv",
+                        mime="text/csv",
+                    )
+                    completed_status = True
 
-                            st.success("Successfully processed your bulk audio files!")
+                    st.success("Successfully processed your bulk audio files!")
 
 # st.stop()
 
