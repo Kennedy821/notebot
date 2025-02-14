@@ -563,7 +563,7 @@ if submit_button:
                             st.error("Invalid file type. Please upload a valid MP3 file.")
                             st.stop()
                         else:
-                            pass
+                            
 
 
 
@@ -585,6 +585,7 @@ if submit_button:
 
                             # for each of the uploaded files, upload them to the backend
                             number_of_files = len(uploaded_files)-1
+                            st.write(f"number of files: {number_of_files}")
                             for object_num in range(len(uploaded_files)):
                                 if object_num != number_of_files:
                                     uploaded_file = uploaded_files[object_num]
