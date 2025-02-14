@@ -492,7 +492,7 @@ if submit_button:
                     # Validate file type (basic validation)
                     if uploaded_file.type != "audio/mpeg":
                         st.error("Invalid file type. Please upload a valid MP3 file.")
-                        st.stop()
+                        # st.stop()
                     else:
 
                         # get the details for where the uploaded file is going to go
@@ -552,7 +552,7 @@ if submit_button:
                                 file_name=f"{uploaded_file_name}.csv",
                                 mime="text/csv",
                             )
-                            st.stop()
+                            # st.stop()
 
 
 # ----------------------------------------------------------------------------------
@@ -565,7 +565,7 @@ if submit_button:
                 for object in uploaded_files:
                     if object.type != "audio/mpeg":
                         st.error("Invalid file type. Please upload a valid MP3 file.")
-                        st.stop()
+                        # st.stop()
                     else:
                         
 
