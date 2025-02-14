@@ -446,25 +446,24 @@ if submit_button:
 
             
             try:
-                # Create credentials object
-                credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
 
-                # Use the credentials to create a client
-                client = storage.Client(credentials=credentials)
-
-
-                # The bucket on GCS in which to write the CSV file
-                bucket_name = st.secrets["gcp_bucket"]["application_bucket"]
-
-                bucket = client.bucket(bucket_name)
 
 
                 # delete any previous transcriptions for this user
-
+                # The bucket on GCS in which to write the CSV file
+                bucket_name = st.secrets["gcp_bucket"]["application_bucket"]
 
                 def delete_csv_file(bucket_name, file_name):
-                    storage_client = storage.Client()
-                    bucket = storage_client.bucket(bucket_name)
+                    # Create credentials object
+                    credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+
+                    # Use the credentials to create a client
+                    client = storage.Client(credentials=credentials)
+
+
+
+
+                    bucket = client.bucket(bucket_name)
                     blob = bucket.blob(file_name)
                     blob.delete()
 
