@@ -663,7 +663,7 @@ if submit_button:
 
                             st.success("Successfully processed your bulk audio files!")
 
-st.stop()
+# st.stop()
 
 
                     # # Create a temporary file
