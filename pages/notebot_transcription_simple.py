@@ -589,7 +589,7 @@ if submit_button:
 
                         # for each of the uploaded files, upload them to the backend
                         number_of_files = len(uploaded_files)-1
-                        st.write(f"number of files: {number_of_files}")
+                        # st.write(f"number of files: {number_of_files}")
                         for object_num in range(len(uploaded_files)):
                             if object_num != number_of_files:
                                 uploaded_file = uploaded_files[object_num]
@@ -639,8 +639,10 @@ if submit_button:
 
                         # now you need to check in the users bucket for the transcribed file
 
-
-                        st.success(f"Successfully uploaded your audio file {uploaded_file_name}.")
+                        if len(uploaded_files)<5:
+                            st.success(f"Successfully uploaded your audio file {uploaded_file_name}.")
+                        else:
+                            pass
                         
                         # add in a timing delay to make sure that the file is uploaded before the next step
                         time.sleep(2)
