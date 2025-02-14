@@ -446,32 +446,32 @@ if submit_button:
 
             
             
-            # Create credentials object
-            credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+            # # Create credentials object
+            # credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
 
-            # Use the credentials to create a client
-            client = storage.Client(credentials=credentials)
-
-
-            # The bucket on GCS in which to write the CSV file
-            bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
+            # # Use the credentials to create a client
+            # client = storage.Client(credentials=credentials)
 
 
-            # delete any previous transcriptions for this user
+            # # The bucket on GCS in which to write the CSV file
+            # bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
 
 
-            def delete_csv_file(bucket_name, file_name):
-                storage_client = storage.Client()
-                bucket = storage_client.bucket(bucket_name)
-                blob = bucket.blob(file_name)
-
-            try:
-                delete_csv_file(bucket,"transcription_successful.csv")
-            except Exception as e:
-                print(f"{e} file does not exist proceeding to upload new file")
+            # # delete any previous transcriptions for this user
 
 
-            time.sleep(3)
+            # def delete_csv_file(bucket_name, file_name):
+            #     storage_client = storage.Client()
+            #     bucket = storage_client.bucket(bucket_name)
+            #     blob = bucket.blob(file_name)
+
+            # try:
+            #     delete_csv_file(bucket,"transcription_successful.csv")
+            # except Exception as e:
+            #     print(f"{e} file does not exist proceeding to upload new file")
+
+
+            # time.sleep(3)
 
             
 
