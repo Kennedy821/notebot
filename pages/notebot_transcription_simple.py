@@ -640,10 +640,10 @@ if submit_button:
                         # now you need to check in the users bucket for the transcribed file
 
 
-                        st.success("Successfully uploaded your audio file!")
+                        st.success(f"Successfully uploaded your audio file {uploaded_file_name}.")
                         
                         # add in a timing delay to make sure that the file is uploaded before the next step
-                        time.sleep(20)
+                        time.sleep(2)
 
 
 
