@@ -1,19 +1,10 @@
 import streamlit as st
 import streamlit.components.v1 as components
 from pathlib import Path
-import sounddevice as sd
-import soundfile as sf
 import numpy as np
 import tempfile
 import time
-# from gtts import gTTS
-import collections
-import threading
-import queue
-import base64
-from pydub import AudioSegment
-from TTS.api import TTS
-import fitz  # PyMuPDF
+
 import tempfile
 from google.oauth2 import service_account
 from google.cloud import storage
