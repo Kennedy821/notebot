@@ -114,11 +114,16 @@ def download_mp3_file_from_gcs(bucket_name, blob_name, file_path):
     print(f"File '{file_path}' downloaded successfully from GCS bucket '{bucket_name}' under '{blob_name}'.")
 
 # define a function that will periodically check for the mp3 file in the gcs bucket
-def check_for_wav_file_in_gcs(bucket_name, blob_name):
+def check_for_wav_file_in_gcs(blob_name):
     # Initialize the GCS client
     credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+
+    # Use the credentials to create a client
     client = storage.Client(credentials=credentials)
-    bucket = client.bucket(bucket_name)
+
+
+    # The bucket on GCS in which to write the CSV file
+    bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
     blob = bucket.blob(blob_name)
     if blob.exists():
         return True
@@ -145,7 +150,7 @@ if st.button("Generate Audio"):
             upload_file_to_gcs(uploaded_file, st.secrets["gcp_bucket"]["application_bucket"], uploaded_file_name)
             # iteratively check if the mp3 file exists in the gcs bucket
             # Keep checking for the MP3 file every 10 seconds
-            while not check_for_wav_file_in_gcs("pdf_files", "notebot_reader_uploaded_file.mp3"):
+            while not check_for_wav_file_in_gcs(f"users/{user_hash}/notebot_reader_uploaded_file.mp3"):
                 time.sleep(10)
                 st.write("Waiting for audio file to be ready...")
             
