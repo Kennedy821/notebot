@@ -71,16 +71,36 @@ user_hash = token
 # make a function that can upload a file to gcs
 def upload_file_to_gcs(file, bucket_name, blob_name):
     # Initialize the GCS client
+    # Create credentials object
     credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+
+    # Use the credentials to create a client
     client = storage.Client(credentials=credentials)
 
-    # Get the bucket
-    bucket = client.bucket(bucket_name)
-    blob = bucket.blob(blob_name)
+
+    # The bucket on GCS in which to write the CSV file
+    bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
+
     
-    # Upload from the file object instead of filename
-    blob.upload_from_file(file)
-    print(f"File saved successfully in GCS bucket '{bucket_name}' under '{blob_name}'.")
+    #-----------------------------------------------------------------------------------------------------
+
+
+    # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
+    # what is the filetype of the uploaded file and filename 
+    uploaded_file_type = file.name.split(".")[-1]
+    uploaded_file_name = file.name.split(".")[0]
+
+    # this makes sure that requests are segregated by each user
+    user_directory = f'users/{user_hash}/'
+
+    logging_filename = f"{uploaded_file_name}.pdf"
+    full_file_path = f'{user_directory}{logging_filename}'
+
+    # The name assigned to the CSV file on GCS
+    blob = bucket.blob(full_file_path)
+    # Upload the file
+    blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
+    print(f"File saved successfully in GCS bucket under '{logging_filename}'.")
 
 
 # download an mp3 file from gcs
@@ -122,7 +142,7 @@ if st.button("Generate Audio"):
             # upload the pdf file to gcs
             # make the filename to upload
             uploaded_file_name = f"users/{user_hash}/reader_uploaded_file.pdf"
-            upload_file_to_gcs(uploaded_file, st.secrets["gcp_service_account"]["bucket_name"], uploaded_file_name)
+            upload_file_to_gcs(uploaded_file, st.secrets["gcp_bucket"]["application_bucket"], uploaded_file_name)
             # iteratively check if the mp3 file exists in the gcs bucket
             # Keep checking for the MP3 file every 10 seconds
             while not check_for_wav_file_in_gcs("pdf_files", "notebot_reader_uploaded_file.mp3"):
