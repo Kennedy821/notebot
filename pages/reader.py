@@ -107,7 +107,6 @@ def check_for_wav_file_in_gcs(bucket_name, blob_name):
 
 
 # load the structure of the streamlit webpage
-st.set_page_config(page_title="Reader", page_icon=":material/volume_up:", layout="wide")
 st.title("Reader")
 
 # display a file uploader widget for pdf files
