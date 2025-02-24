@@ -162,20 +162,22 @@ if st.button("Generate Audio"):
             # process the pdf 
             pdf_page_container = []
 
-            # Read the content of the uploaded file
-            pdf_content = uploaded_file.read()
-            uploaded_file.seek(0)
+            # Create a temporary file to properly handle the PDF
+            with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_pdf:
+                # Write the uploaded file content to the temporary file
+                temp_pdf.write(uploaded_file.getvalue())
+                temp_pdf.flush()  # Ensure all data is written
+                
+                # Open the PDF from the temporary file
+                doc = fitz.open(temp_pdf.name)
 
-            # Open the PDF from the content
-            doc = fitz.open(pdf_content, filetype="pdf")
+                for page_num in range(len(doc)):
+                    page = doc.load_page(page_num)
+                    text = page.get_text("text")
+                    pdf_page_container.append(text)
 
-            for page_num in range(len(doc)):
-                page = doc.load_page(page_num)
-                text = page.get_text("text")
-                pdf_page_container.append(text)
-
-            # Close the document
-            doc.close()
+                # Close the document
+                doc.close()
 
             # join the text from the pdf
             text = " ".join(pdf_page_container)
