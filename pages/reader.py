@@ -167,7 +167,7 @@ if st.button("Generate Audio"):
             uploaded_file.seek(0)
 
             # Open the PDF from the content
-            doc = fitz.open(stream=pdf_content, filetype="pdf")
+            doc = fitz.open(pdf_content, filetype="pdf")
 
             for page_num in range(len(doc)):
                 page = doc.load_page(page_num)
