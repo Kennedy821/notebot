@@ -203,9 +203,13 @@ if st.button("Generate Audio"):
             with tempfile.TemporaryDirectory() as temp_dir:
            
               # Once found, download the MP3 file
-              download_mp3_file_from_gcs("pdf_files", "notebot_reader_uploaded_file.wav", "notebot_reader_uploaded_file.wav")
-
+              local_wav_path = f"{temp_dir}/notebot_reader_uploaded_file.wav"
+              download_mp3_file_from_gcs(
+                  st.secrets["gcp_bucket"]["application_bucket"],
+                  f"users/{user_hash}/notebot_reader_uploaded_file.wav",
+                  local_wav_path
+              )
               # Generate speech
-              output_wav_path = "reader_output.wav"
+              # output_wav_path = "reader_output.wav"
 
-              st.audio(output_wav_path)
+              st.audio(local_wav_path)
