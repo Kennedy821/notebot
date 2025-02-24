@@ -195,7 +195,7 @@ if st.button("Generate Audio"):
             
             # iteratively check if the mp3 file exists in the gcs bucket
             # Keep checking for the MP3 file every 10 seconds
-            while not check_for_wav_file_in_gcs(f"users/{user_hash}/notebot_reader_uploaded_file.mp3"):
+            while not check_for_wav_file_in_gcs(f"users/{user_hash}/notebot_reader_uploaded_file.wav"):
                 time.sleep(10)
                 st.write("Waiting for audio file to be ready...")
             
