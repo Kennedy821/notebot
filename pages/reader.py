@@ -164,6 +164,7 @@ if st.button("Generate Audio"):
 
             # Read the content of the uploaded file
             pdf_content = uploaded_file.read()
+            uploaded_file.seek(0)
 
             # Open the PDF from the content
             doc = fitz.open(stream=pdf_content, filetype="pdf")
