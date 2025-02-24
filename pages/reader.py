@@ -4,13 +4,13 @@ from pathlib import Path
 import numpy as np
 import tempfile
 import time
-
+import fitz
 import tempfile
 from google.oauth2 import service_account
 from google.cloud import storage
 from PIL import Image
 import jwt
-
+import pandas as pd
 
 im = Image.open('slug_logo.png')
 st.set_page_config(
@@ -102,6 +102,16 @@ def upload_file_to_gcs(file, bucket_name, blob_name):
     blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
     print(f"File saved successfully in GCS bucket under '{logging_filename}'.")
 
+def upload_csv_to_gcs(dataframe, bucket_name, blob_name):
+    # Initialize the GCS client
+    credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+    client = storage.Client(credentials=credentials)
+    bucket = client.bucket(bucket_name)
+    
+    # convert the dataframe to a csv
+    csv_data = dataframe.to_csv(index=False)
+    blob = bucket.blob(blob_name)
+    blob.upload_from_string(csv_data, content_type="csv")
 
 # download an mp3 file from gcs
 def download_mp3_file_from_gcs(bucket_name, blob_name, file_path):
@@ -148,6 +158,40 @@ if st.button("Generate Audio"):
             # make the filename to upload
             uploaded_file_name = f"users/{user_hash}/reader_uploaded_file.pdf"
             upload_file_to_gcs(uploaded_file, st.secrets["gcp_bucket"]["application_bucket"], uploaded_file_name)
+            
+            # process the pdf 
+            pdf_page_container = []
+
+            # Read the content of the uploaded file
+            pdf_content = uploaded_file.read()
+
+            # Open the PDF from the content
+            doc = fitz.open(stream=pdf_content, filetype="pdf")
+
+            for page_num in range(len(doc)):
+                page = doc.load_page(page_num)
+                text = page.get_text("text")
+                pdf_page_container.append(text)
+
+            # Close the document
+            doc.close()
+
+            # join the text from the pdf
+            text = " ".join(pdf_page_container)
+
+            # create a dataframe from the text
+            dataframe = pd.DataFrame({"text": [text]})
+
+
+
+
+
+
+            # upload the csv file to gcs
+            uploaded_csv_name = f"users/{user_hash}/reader_uploaded_file.csv"
+            upload_csv_to_gcs(dataframe, st.secrets["gcp_bucket"]["application_bucket"], uploaded_csv_name)
+            
+            
             # iteratively check if the mp3 file exists in the gcs bucket
             # Keep checking for the MP3 file every 10 seconds
             while not check_for_wav_file_in_gcs(f"users/{user_hash}/notebot_reader_uploaded_file.mp3"):
