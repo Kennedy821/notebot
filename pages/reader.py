@@ -179,6 +179,7 @@ if st.button("Generate Audio"):
             try:
                 
                 clear_legacy_files(user_hash, "reader_uploaded_file.wav")
+                clear_legacy_files(user_hash, "reader_uploaded_file.csv")
             except Exception as e:
                 logging.error(f"Error deleting reader_uploaded_file: {e}")
 
