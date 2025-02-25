@@ -115,7 +115,7 @@ for idx, section in enumerate(sections):
         st.markdown("""
             <style>
             [data-testid="column"] {
-                min-height: 300px;
+                min-height: 500px;
             }
             </style>
             """, unsafe_allow_html=True)
