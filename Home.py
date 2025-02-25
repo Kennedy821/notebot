@@ -112,7 +112,13 @@ for idx, section in enumerate(sections):
     with cols[idx % 3]:  # Dynamically choose a column
         # Display the image
         st.image(section["image"], use_container_width=True, caption=section["label"])
-
+        st.markdown("""
+            <style>
+            [data-testid="column"] {
+                min-height: 300px;
+            }
+            </style>
+            """, unsafe_allow_html=True)
         # Make the image clickable
 
         if st.button(f"Go to **{section['label']}**", key=f"btn_{idx}", use_container_width=True):
