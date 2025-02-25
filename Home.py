@@ -96,8 +96,12 @@ sections = [
     {"image": "microphone_image.png", "label": "Reader", "url": f"https://notebot.streamlit.app/reader?token={token}"},
 
 ]
-
-
+import os
+# Add this debug code temporarily
+if os.path.exists('microphone_image.png'):
+    st.write("Image file exists!")
+else:
+    st.write("Image file not found!")
 
 
 
