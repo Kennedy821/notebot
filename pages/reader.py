@@ -11,6 +11,7 @@ from google.cloud import storage
 from PIL import Image
 import jwt
 import pandas as pd
+import logging
 
 im = Image.open('slug_logo.png')
 st.set_page_config(
@@ -140,6 +141,27 @@ def check_for_wav_file_in_gcs(blob_name):
     else:
         return False
 
+def clear_legacy_files(user_hash, filename):
+    """
+    Clear legacy files from GCS bucket for a specific user
+    Args:
+        user_hash (str): User identifier
+        filename (str): Name of file to delete
+    """
+    try:
+        # Initialize the GCS client
+        credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+        client = storage.Client(credentials=credentials)
+        bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
+        
+        # Create the full path and delete the blob
+        blob_path = f"users/{user_hash}/{filename}"
+        blob = bucket.blob(blob_path)
+        blob.delete()
+        print(f"Deleted {blob_path} from bucket.")
+    except Exception as e:
+        print(f"Error deleting {blob_path}: {e}")
+
 
 # load the structure of the streamlit webpage
 st.title("Reader")
@@ -152,6 +174,14 @@ if st.button("Generate Audio"):
     with st.spinner("Generating audio..."):
         # check if a file has been uploaded
         if uploaded_file is not None:
+            
+            # before processing the provided file we will clear the bucke of any legacy files
+            try:
+                
+                clear_legacy_files(user_hash, "reader_uploaded_file.csv")
+            except Exception as e:
+                logging.error(f"Error deleting reader_uploaded_file: {e}")
+
             
 
             # upload the pdf file to gcs
