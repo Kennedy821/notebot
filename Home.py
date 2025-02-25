@@ -111,7 +111,7 @@ cols = st.columns(3)
 for idx, section in enumerate(sections):
     with cols[idx % 3]:  # Dynamically choose a column
         # Display the image
-        st.image(section["image"], use_container_width=True, caption=section["label"])
+        st.image(section["image"], use_container_width=True, caption=section["label"], height=500)
         st.markdown("""
             <style>
             [data-testid="column"] {
