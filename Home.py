@@ -92,8 +92,8 @@ st.markdown(hide_default_format, unsafe_allow_html=True)
 sections = [
     {"image": "transcription_slug.png", "label": "Transcription", "url": f"https://notebot.streamlit.app/notebot_transcription_simple?token={token}"},
     {"image": "slug_notes.png", "label": "Notes", "url": f"https://notebot.streamlit.app/notebot_generate_notes_simple?token={token}"},
-    {"image": "slug_study.png", "label": "Study", "url": f"https://notebot.streamlit.app/notebot_study_multiselect?token={token}"},
-    # {"image": "microphone_image.png", "label": "Reader", "url": f"https://notebot.streamlit.app/reader?token={token}"},
+    # {"image": "slug_study.png", "label": "Study", "url": f"https://notebot.streamlit.app/notebot_study_multiselect?token={token}"},
+    {"image": "slug_study.png", "label": "Reader", "url": f"https://notebot.streamlit.app/reader?token={token}"},
 
 ]
 import os
