@@ -92,8 +92,8 @@ st.markdown(hide_default_format, unsafe_allow_html=True)
 sections = [
     {"image": "transcription_slug.png", "label": "Transcription", "url": f"https://notebot.streamlit.app/notebot_transcription_simple?token={token}"},
     {"image": "slug_notes.png", "label": "Notes", "url": f"https://notebot.streamlit.app/notebot_generate_notes_simple?token={token}"},
-    # {"image": "slug_study.png", "label": "Study", "url": f"https://notebot.streamlit.app/notebot_study_multiselect?token={token}"},
-    {"image": "microphone_image.png", "label": "Reader", "url": f"https://notebot.streamlit.app/reader?token={token}"},
+    {"image": "slug_study.png", "label": "Study", "url": f"https://notebot.streamlit.app/notebot_study_multiselect?token={token}"},
+    # {"image": "microphone_image.png", "label": "Reader", "url": f"https://notebot.streamlit.app/reader?token={token}"},
 
 ]
 import os
@@ -111,14 +111,14 @@ cols = st.columns(3)
 for idx, section in enumerate(sections):
     with cols[idx % 3]:  # Dynamically choose a column
         # Display the image
-        st.image(section["image"], use_container_width=True, caption=section["label"], height=500)
-        st.markdown("""
-            <style>
-            [data-testid="column"] {
-                min-height: 500px;
-            }
-            </style>
-            """, unsafe_allow_html=True)
+        st.image(section["image"], use_container_width=True, caption=section["label"])
+        # st.markdown("""
+        #     <style>
+        #     [data-testid="column"] {
+        #         min-height: 500px;
+        #     }
+        #     </style>
+        #     """, unsafe_allow_html=True)
         # Make the image clickable
 
         if st.button(f"Go to **{section['label']}**", key=f"btn_{idx}", use_container_width=True):
