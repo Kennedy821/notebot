@@ -14,7 +14,7 @@ bucket_name = st.secrets["gcp_bucket"]["application_bucket"]
 
 im = Image.open('slug_logo.png')
 st.set_page_config(
-    page_title="Notebot",
+    page_title="Notebot_login",
     page_icon=im,
     initial_sidebar_state="collapsed",
     ) 
