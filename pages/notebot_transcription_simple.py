@@ -599,8 +599,8 @@ if submit_button:
                                 # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
                                 # what is the filetype of the uploaded file and filename 
                                 uploaded_file_type = uploaded_file.name.split(".")[-1]
-                                uploaded_file_name = uploaded_file.name.split(".")[0]
-
+                                uploaded_file_name_list = uploaded_file.name.split(".")[:-1]
+                                uploaded_file_name = " ".join(uploaded_file_name_list)
                                 # this makes sure that requests are segregated by each user
                                 user_directory = f'users/{user_hash}/'
 
