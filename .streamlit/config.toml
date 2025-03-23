@@ -8,7 +8,7 @@ secondaryBackgroundColor = '#7EACB5' # Warm grey
 
 textColor = "#021526" # Teal text
 
-font="sans serif"
+# font="sans serif"
 
 [server]
 maxUploadSize = 600
