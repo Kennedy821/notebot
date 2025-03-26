@@ -361,7 +361,7 @@ processing_type = st.selectbox("Would you like to upload your own audio file(s)?
 if processing_type == "upload my own audio":
 
 
-    upload_type = st.selectbox("Would you like to upload a single file or many files?", options=["","single file","bulk"])
+    upload_type = st.selectbox("Would you like to upload a single file or many files?", options=["","bulk"])
 
     if upload_type=="single file":
         uploaded_file = st.file_uploader("Choose a file", type=['mp3'], accept_multiple_files=False)
