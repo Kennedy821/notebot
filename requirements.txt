@@ -4,11 +4,11 @@ google-auth  # For google.oauth2.service_account
 pillow  # For PIL (Python Imaging Library)
 google-cloud-storage  # For google.cloud.storage
 pandas
-openai-whisper
-pytube
-openai
+# openai-whisper
+#pytube
+# openai
 tiktoken
-moviepy
+#moviepy
 pymupdf  # For fitz (PyMuPDF)
 reportlab
 markdown2
