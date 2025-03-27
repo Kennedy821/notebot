@@ -1,11 +1,11 @@
-import whisper
+#import whisper
 import os
 import streamlit as st
 import pandas as pd
 from openai import OpenAI
 import os
 import tiktoken
-import yt_dlp
+# import yt_dlp
 from PIL import Image
 from fuzzywuzzy import fuzz
 import tempfile
