@@ -137,11 +137,14 @@ def check_status_of_fast_processing():
     bucket = client.bucket(st.secrets["notebot"]["bucket_name"])
 
     # create a dataframe that has one column to check if thhe fast job is active
-    fast_job_df = pd.DataFrame([])
+    fast_job_df = pd.DataFrame([user_hash])
     # add the user hash to the dataframe
-    fast_job_df["user_hash"] = user_hash
+    fast_job_df.columns = ["user_hash"] 
+
     blob = bucket.blob(f"status_files/is_fast_job_active.csv")
+    
     csv_string = fast_job_df.to_csv(index=False, encoding='utf-8')
+    
     blob.upload_from_filename(csv_string, 'text/csv')
 
     time.sleep(10)
