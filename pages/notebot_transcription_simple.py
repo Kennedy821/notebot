@@ -143,9 +143,8 @@ def check_status_of_fast_processing():
 
     blob = bucket.blob(f"status_files/is_fast_job_active.csv")
     
-    csv_string = fast_job_df.to_csv(index=False, encoding='utf-8')
-    
-    blob.upload_from_filename(csv_string, 'text/csv')
+    csv_string = fast_job_df.to_csv(index=False)
+    blob.upload_from_string(csv_string)
 
     time.sleep(10)
 
@@ -292,7 +291,7 @@ def save_note(category, topic, file_name, file_content):
     """
 
     # Define the root folder
-    root_folder = "/Users/tariromashongamhende/Documents/Documents - Tariro’s MacBook Pro/ml_projects/notebot/"
+    root_folder = "/Users/tariromashongamhende/Documents/Documents - Tariro's MacBook Pro/ml_projects/notebot/"
 
     # Create the category folder if it doesn't exist
     category_path = os.path.join(root_folder, category)
@@ -744,101 +743,13 @@ if submit_button:
                     # save_note_cloud_version(category, topic_chosen, song_name, bot_response)
 
 
-#             # this is the processing for using a link from a website
-#             if processing_type == "use a link from a website":
-#                 if user_input:
-#                     # load a yt link
-#                     yt_link = user_input
-#                     # temp_song_dir = '/'.join(os.getcwd().split("/")[:])
 
-#                     with tempfile.TemporaryDirectory() as temp_song_dir:
+                    # st.success("Successfully processed your transcript!")
 
 
-
-#                         # yt = YouTube(yt_link)
-#                         url = yt_link
-#                         # st.markdown(yt_link)
-#                         song_directory = temp_song_dir
-#                         # Define the download options to extract audio
-#                         ydl_opts = {
-#                             'format': 'bestaudio/best',
-#                             'outtmpl': f'{song_directory}/%(title)s.%(ext)s',  # Save to 'downloads' folder with title as filename
-#                             'postprocessors': [{
-#                                 'key': 'FFmpegExtractAudio',
-#                                 'preferredcodec': 'mp3',  # You can also use 'wav'
-#                                 'preferredquality': '192',
-#                             }],
-#                             'replace_in_metadata': [
-#                                                     ('title', r' \:', ''),
-                                                    
-#                                                     ],
-
-#                             'restrictfilenames': True,  # Optional: further sanitize filenames
-
-#                         }
-
-#                         # url = 'https://www.youtube.com/watch?v=Xg618pb_hwQ'
-
-#                         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-#                             # ydl.download([url])
-#                             info_dict = ydl.extract_info(url, download=True)
-#                             video_title = info_dict.get('title', None)
-#                             st.markdown(video_title)
-
-
-#                         st.markdown(f"Here is what is in the tempdir: {os.listdir(song_directory)}")
-
-#                         valid_file_name = []
-#                         for i in os.listdir(song_directory):
-#                             st.markdown(i)
-
-#                             ratio = fuzz.ratio(video_title, i)
-#                             if ratio>60:
-#                                 valid_file_name.append(i)
-
-
-#                         st.markdown(f"here is the output of the fuzzy match: {valid_file_name}")
-#                         # Get the full path of the downloaded MP3 file
-#                         downloaded_file = os.path.join(temp_song_dir, f"{valid_file_name}.mp3")
-#                         audio_path = os.path.join(song_directory,valid_file_name[-1])
-#                         st.markdown(f"old filepath: {audio_path}")
-#                         st.markdown(f"new filepath: {downloaded_file}")
-#                         # audio_stream = yt.streams.filter(only_audio=True).first()
-#                         # audio_path = audio_stream.download(output_path=temp_song_dir)
-#                         # st.markdown(audio_path)
-#                         # song_name = audio_path.title().split("/")[-1].split(".")[0]
-#                         # mp3_song_name = yt.title.replace('.mp4','.mp3').replace('.Mp4','.mp3').replace('.MP4','.mp3').replace("|","")
-#                         # this is the working version
-#                         # song_file_directory = os.getcwd()
-#                         song_name = video_title
-                        
-#                         song_file_directory = temp_song_dir
-
-#                         list_of_items_in_temp_dir = [x for x in os.listdir(song_file_directory)]
-
-#                         # result = model.transcribe(song_file_directory)
-
-#                         st.session_state['messages'].append(('You', user_input))
-#                         st.markdown("beginning to process your link.")
-#                         bot_response = model.transcribe(audio_path, language="en")
-#                         bot_response = bot_response["text"]
-#                         st.session_state['messages'].append(('Bot', bot_response))
-
-#                         # this is the transcripts directory to save the file to 
-
-#                         category = "Transcripts"
-
-
-#                         save_note_cloud_version(category, topic_chosen, song_name, bot_response)
-
-
-
-#                         st.success("Successfully processed your transcript!")
-
-
-#                         # # save this bot response in the same location as the audio_path
-#                         # test_lecture_df = pd.DataFrame([bot_response]).rename(columns={0:"lecture_notes"})
-#                         # test_lecture_df.to_parquet(f"{song_file_directory}/{song_name}_text_from_notebot_part_1.parquet.gzip", compression="gzip")
+                    # # save this bot response in the same location as the audio_path
+                    # test_lecture_df = pd.DataFrame([bot_response]).rename(columns={0:"lecture_notes"})
+                    # test_lecture_df.to_parquet(f"{song_file_directory}/{song_name}_text_from_notebot_part_1.parquet.gzip", compression="gzip")
 
 
 # for sender, message in st.session_state['messages']:
