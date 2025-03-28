@@ -125,6 +125,32 @@ st.title("Notebot: Transcription")
 if 'messages' not in st.session_state:
     st.session_state['messages'] = []
 
+def delete_csv_file(file_name, bucket_name=st.secrets["notebot"]["bucket_name"]):
+    """
+    Delete a file from Google Cloud Storage bucket.
+    
+    Args:
+        file_name (str): Path to the file in the bucket
+        bucket_name (str): Name of the bucket (defaults to notebot bucket)
+    """
+    try:
+        # Create credentials object
+        credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+
+        # Use the credentials to create a client
+        client = storage.Client(credentials=credentials)
+        bucket = client.bucket(bucket_name)
+        blob = bucket.blob(file_name)
+        
+        # Check if blob exists before trying to delete
+        if blob.exists():
+            blob.delete()
+            print(f"File {file_name} deleted from bucket {bucket_name}")
+        else:
+            print(f"File {file_name} not found in bucket {bucket_name}")
+            
+    except Exception as e:
+        print(f"Error deleting file: {e}")
 
 def check_status_of_fast_processing():
     # Create credentials object
@@ -496,6 +522,12 @@ if submit_button:
             fast_job_status_code = 0
         # except Exception as e:
         #     st.write(f"An error occurred while checking the status of the fast job: {e}")
+
+        # now we know the status of the fast job we can delete the checking file from the bucket
+        try:
+            delete_csv_file(f"status_files/is_fast_job_active.csv")
+        except Exception as e:
+            print(f"Error while deleting status file: {e}")
 
         
         try:
