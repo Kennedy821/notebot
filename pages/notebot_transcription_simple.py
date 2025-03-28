@@ -140,9 +140,9 @@ def check_status_of_fast_processing():
     fast_job_df = pd.DataFrame([])
     # add the user hash to the dataframe
     fast_job_df["user_hash"] = user_hash
-    fast_job_df.to_csv(f"status_files/is_fast_job_active.csv", index=False)
     blob = bucket.blob(f"status_files/is_fast_job_active.csv")
-    blob.upload_from_filename(f"is_fast_job_active.csv")
+    csv_string = fast_job_df.to_csv(index=False, encoding='utf-8')
+    blob.upload_from_filename(csv_string, 'text/csv')
 
     time.sleep(10)
 
