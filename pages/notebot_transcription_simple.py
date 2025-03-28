@@ -483,15 +483,15 @@ submit_button = st.button(label='Send')
 if submit_button:
         
     with st.spinner("Processing your transcription", show_time=True):
-        try:
-            fast_job_status = check_status_of_fast_processing()
+        # try:
+        fast_job_status = check_status_of_fast_processing()
 
-            if fast_job_status == 1:
-                st.success("Fast job is active, please wait for the job to complete")
-            else:
-                st.success("Fast job is not active, please wait for the job to complete")
-        except Exception as e:
-            st.write(f"An error occurred while checking the status of the fast job: {e}")
+        if fast_job_status == 1:
+            st.success("Fast job is active, please wait for the job to complete")
+        else:
+            st.success("Fast job is not active, please wait for the job to complete")
+        # except Exception as e:
+        #     st.write(f"An error occurred while checking the status of the fast job: {e}")
 
         
         try:
