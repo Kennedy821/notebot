@@ -82,6 +82,10 @@ if token:
         st.write(f"Your account: {user_email}")
 
 user_hash = token
+
+
+
+
 # the code below will be deleted as the transcription will be handled on the backend
 # ----------------------------------------------------------------------------------
 
@@ -120,6 +124,42 @@ st.title("Notebot: Transcription")
 
 if 'messages' not in st.session_state:
     st.session_state['messages'] = []
+
+
+def check_status_of_fast_processing():
+    # Create credentials object
+    credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+
+    # Use the credentials to create a client
+    client = storage.Client(credentials=credentials)
+
+    # Get the bucket
+    bucket = client.bucket(st.secrets["notebot"]["bucket_name"])
+
+    # create a dataframe that has one column to check if thhe fast job is active
+    fast_job_df = pd.DataFrame(columns=["fast_job_active"])
+    # add the user hash to the dataframe
+    fast_job_df["user_hash"] = user_hash
+    fast_job_df.to_csv(f"status_files/is_fast_job_active.csv", index=False)
+    blob = bucket.blob(f"status_files/is_fast_job_active.csv")
+    blob.upload_from_filename(f"is_fast_job_active.csv")
+
+    time.sleep(10)
+
+    # check if the new response file exists in gcs 
+    FILE_SUFFIX = "fast_job_status_verified.csv"
+
+    prefix = "status_files/"
+    matching_blobs = []
+    for blob in bucket.list_blobs(prefix=prefix):
+        if blob.name.endswith(FILE_SUFFIX):
+
+            matching_blobs.append(blob.name)
+    
+    if len(matching_blobs)>0:
+        return 1
+    else:
+        return 0
 
 def flatten(nested_list):
     """
@@ -443,6 +483,15 @@ submit_button = st.button(label='Send')
 if submit_button:
         
     with st.spinner("Processing your transcription", show_time=True):
+        try:
+            fast_job_status = check_status_of_fast_processing()
+
+            if fast_job_status == 1:
+                st.success("Fast job is active, please wait for the job to complete")
+            else:
+                st.success("Fast job is not active, please wait for the job to complete")
+        except Exception as e:
+            st.write(f"An error occurred while checking the status of the fast job: {e}")
 
         
         try:
