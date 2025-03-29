@@ -758,7 +758,7 @@ if submit_button:
                                 completed_status = True
 
                                 st.success("Successfully processed your bulk audio files!")
-                            st.stop()
+                            # st.stop()
 
                         else:
                             for object_num in range(len(uploaded_files)):
@@ -838,7 +838,7 @@ if submit_button:
                                 completed_status = True
 
                                 st.success("Successfully processed your bulk audio files!")
-                            st.stop()
+st.stop()
 
 # st.stop()
 
