@@ -737,9 +737,28 @@ if submit_button:
                             
                             # add in a timing delay to make sure that the file is uploaded before the next step
                             st.success("Successfully uploaded your file(s)")
-                            pass
-                            st.session_state.files_uploaded = True
-                            st.stop()  # Stop execution here after upload
+                            # pass
+
+                        
+                            # st.session_state.files_uploaded = True
+                            # st.stop()  # Stop execution here after upload
+
+                            with tempfile.TemporaryDirectory() as temp_dir:
+
+                                results_df = get_transcription_from_gcs(user_hash)
+
+                                # convert string to downloadable csv from streamlit with download button
+                                csv = results_df.to_csv(index=False)
+                                st.download_button(
+                                    label="Download Transcription",
+                                    data=csv,
+                                    file_name=f"bulk_transcription_job.csv",
+                                    mime="text/csv",
+                                )
+                                completed_status = True
+
+                                st.success("Successfully processed your bulk audio files!")
+                            st.stop()
 
                         else:
                             for object_num in range(len(uploaded_files)):
@@ -800,25 +819,26 @@ if submit_button:
 
                             st.success("Successfully uploaded your file(s)")
 
-                            pass
+                            # pass
                             st.session_state.files_uploaded = True
-                            st.stop()  # Stop execution here after upload
+                            # st.stop()  # Stop execution here after upload
 
-                with tempfile.TemporaryDirectory() as temp_dir:
+                            with tempfile.TemporaryDirectory() as temp_dir:
 
-                    results_df = get_transcription_from_gcs(user_hash)
+                                results_df = get_transcription_from_gcs(user_hash)
 
-                    # convert string to downloadable csv from streamlit with download button
-                    csv = results_df.to_csv(index=False)
-                    st.download_button(
-                        label="Download Transcription",
-                        data=csv,
-                        file_name=f"bulk_transcription_job.csv",
-                        mime="text/csv",
-                    )
-                    completed_status = True
+                                # convert string to downloadable csv from streamlit with download button
+                                csv = results_df.to_csv(index=False)
+                                st.download_button(
+                                    label="Download Transcription",
+                                    data=csv,
+                                    file_name=f"bulk_transcription_job.csv",
+                                    mime="text/csv",
+                                )
+                                completed_status = True
 
-                    st.success("Successfully processed your bulk audio files!")
+                                st.success("Successfully processed your bulk audio files!")
+                            st.stop()
 
 # st.stop()
 
