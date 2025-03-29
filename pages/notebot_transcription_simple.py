@@ -726,12 +726,11 @@ if submit_button:
 
 
 
-                            # now you need to check in the users bucket for the transcribed file
 
-                            if len(uploaded_files)<5:
-                                st.success(f"Successfully uploaded your audio file for fast job {uploaded_file_name}.")
-                            else:
-                                pass
+                            # if len(uploaded_files)<5:
+                            #     st.success(f"Successfully uploaded your audio file for fast job {uploaded_file_name}.")
+                            # else:
+                            #     pass
                             
                             # add in a timing delay to make sure that the file is uploaded before the next step
 
@@ -783,17 +782,16 @@ if submit_button:
 
 
 
-                            # now you need to check in the users bucket for the transcribed file
 
-                            if len(uploaded_files)<5:
-                                st.success(f"Successfully uploaded your audio file {uploaded_file_name}.")
-                            else:
-                                pass
+                            # if len(uploaded_files)<5:
+                            #     st.success(f"Successfully uploaded your audio file {uploaded_file_name}.")
+                            # else:
+                            #     pass
                             
                             # add in a timing delay to make sure that the file is uploaded before the next step
                             time.sleep(2)
 
-
+                st.success("Successfully uploaded your file(s)")
 
                 with tempfile.TemporaryDirectory() as temp_dir:
 
