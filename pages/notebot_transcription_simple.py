@@ -656,190 +656,191 @@ if submit_button:
                         st.error("Invalid file type. Please upload a valid MP3 file.")
                         # st.stop()
                     else:
+                        pass
                         
 
 
 
-                        # get the details for where the uploaded file is going to go
-                        #-----------------------------------------------------------------------------------------------------
+                # get the details for where the uploaded file is going to go
+                #-----------------------------------------------------------------------------------------------------
 
-                        # Create credentials object
-                        credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+                # Create credentials object
+                credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
 
-                        # Use the credentials to create a client
-                        client = storage.Client(credentials=credentials)
-
-
-                        # The bucket on GCS in which to write the CSV file
-                        bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
-
-                        
-                        #-----------------------------------------------------------------------------------------------------
-
-                        # for each of the uploaded files, upload them to the backend
-                        number_of_files = len(uploaded_files)-1
-                        # st.write(f"number of files: {number_of_files}")
-
-                        # we're adding a split flow for active fast job status and non active fast job status
-                        if fast_job_status_code == 1:
-                            for object_num in range(len(uploaded_files)):
-                                if object_num != number_of_files:
-                                    uploaded_file = uploaded_files[object_num]
-                                    # st.write(f"this is not the last file: {uploaded_file}")
-
-                                    # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
-                                    # what is the filetype of the uploaded file and filename 
-                                    uploaded_file_type = uploaded_file.name.split(".")[-1]
-                                    uploaded_file_name_list = uploaded_file.name.split(".")[:-1]
-                                    uploaded_file_name = " ".join(uploaded_file_name_list)
-                                    # this makes sure that requests are segregated by each user
-                                    user_directory = f'users/{user_hash}/'
-
-                                    logging_filename = f"{uploaded_file_name}_bulk_upload_object_{object_num}_notebot_transcription_fast_job_active.mp3"
-                                    full_file_path = f'{user_directory}{logging_filename}'
-
-                                    # The name assigned to the CSV file on GCS
-                                    blob = bucket.blob(full_file_path)
-                                    # Upload the file
-                                    uploaded_file.seek(0)
-
-                                    blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
-                                # for the last file in the list we will flag that it is the final file as this will be the last file to be uploaded
-                                else:
-
-                                    uploaded_file = uploaded_files[object_num]
-                                    # st.write(f"this is the last file: {uploaded_file}")
-
-                                    # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
-                                    # what is the filetype of the uploaded file and filename 
-                                    uploaded_file_type = uploaded_file.name.split(".")[-1]
-                                    uploaded_file_name_list = uploaded_file.name.split(".")[:-1]
-                                    uploaded_file_name = " ".join(uploaded_file_name_list)
-                                    # this makes sure that requests are segregated by each user
-                                    user_directory = f'users/{user_hash}/'
-
-                                    logging_filename = f"{uploaded_file_name}_bulk_upload_object_{object_num}_final_notebot_transcription_fast_job_active.mp3"
-                                    full_file_path = f'{user_directory}{logging_filename}'
-
-                                    # The name assigned to the CSV file on GCS
-                                    blob = bucket.blob(full_file_path)
-                                    # Upload the file
-                                    uploaded_file.seek(0)
-                                    blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
+                # Use the credentials to create a client
+                client = storage.Client(credentials=credentials)
 
 
+                # The bucket on GCS in which to write the CSV file
+                bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
 
+                
+                #-----------------------------------------------------------------------------------------------------
 
-                            # if len(uploaded_files)<5:
-                            #     st.success(f"Successfully uploaded your audio file for fast job {uploaded_file_name}.")
-                            # else:
-                            #     pass
-                            
-                            # add in a timing delay to make sure that the file is uploaded before the next step
-                            st.success("Successfully uploaded your file(s)")
-                            # pass
+                # for each of the uploaded files, upload them to the backend
+                number_of_files = len(uploaded_files)-1
+                # st.write(f"number of files: {number_of_files}")
 
-                        
-                            # st.session_state.files_uploaded = True
-                            # st.stop()  # Stop execution here after upload
+                # we're adding a split flow for active fast job status and non active fast job status
+                if fast_job_status_code == 1:
+                    for object_num in range(len(uploaded_files)):
+                        if object_num != number_of_files:
+                            uploaded_file = uploaded_files[object_num]
+                            # st.write(f"this is not the last file: {uploaded_file}")
 
-                            with tempfile.TemporaryDirectory() as temp_dir:
+                            # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
+                            # what is the filetype of the uploaded file and filename 
+                            uploaded_file_type = uploaded_file.name.split(".")[-1]
+                            uploaded_file_name_list = uploaded_file.name.split(".")[:-1]
+                            uploaded_file_name = " ".join(uploaded_file_name_list)
+                            # this makes sure that requests are segregated by each user
+                            user_directory = f'users/{user_hash}/'
 
-                                results_df = get_transcription_from_gcs(user_hash)
+                            logging_filename = f"{uploaded_file_name}_bulk_upload_object_{object_num}_notebot_transcription_fast_job_active.mp3"
+                            full_file_path = f'{user_directory}{logging_filename}'
 
-                                # convert string to downloadable csv from streamlit with download button
-                                csv = results_df.to_csv(index=False)
-                                st.download_button(
-                                    label="Download Transcription",
-                                    data=csv,
-                                    file_name=f"bulk_transcription_job.csv",
-                                    mime="text/csv",
-                                    key="fast_job_download"
-                                )
-                                completed_status = True
+                            # The name assigned to the CSV file on GCS
+                            blob = bucket.blob(full_file_path)
+                            # Upload the file
+                            uploaded_file.seek(0)
 
-                                st.success("Successfully processed your bulk audio files!")
-                            # st.stop()
+                            blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
+                        # for the last file in the list we will flag that it is the final file as this will be the last file to be uploaded
+                        else:
 
-                        elif fast_job_status_code == 0:
-                            for object_num in range(len(uploaded_files)):
-                                if object_num != number_of_files:
-                                    uploaded_file = uploaded_files[object_num]
-                                    # st.write(f"this is not the last file: {uploaded_file}")
+                            uploaded_file = uploaded_files[object_num]
+                            # st.write(f"this is the last file: {uploaded_file}")
 
-                                    # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
-                                    # what is the filetype of the uploaded file and filename 
-                                    uploaded_file_type = uploaded_file.name.split(".")[-1]
-                                    uploaded_file_name_list = uploaded_file.name.split(".")[:-1]
-                                    uploaded_file_name = " ".join(uploaded_file_name_list)
-                                    # this makes sure that requests are segregated by each user
-                                    user_directory = f'users/{user_hash}/'
+                            # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
+                            # what is the filetype of the uploaded file and filename 
+                            uploaded_file_type = uploaded_file.name.split(".")[-1]
+                            uploaded_file_name_list = uploaded_file.name.split(".")[:-1]
+                            uploaded_file_name = " ".join(uploaded_file_name_list)
+                            # this makes sure that requests are segregated by each user
+                            user_directory = f'users/{user_hash}/'
 
-                                    logging_filename = f"{uploaded_file_name}_bulk_upload_object_{object_num}_notebot_transcription.mp3"
-                                    full_file_path = f'{user_directory}{logging_filename}'
+                            logging_filename = f"{uploaded_file_name}_bulk_upload_object_{object_num}_final_notebot_transcription_fast_job_active.mp3"
+                            full_file_path = f'{user_directory}{logging_filename}'
 
-                                    # The name assigned to the CSV file on GCS
-                                    blob = bucket.blob(full_file_path)
-                                    # Upload the file
-                                    uploaded_file.seek(0)
-
-                                    blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
-                                # for the last file in the list we will flag that it is the final file as this will be the last file to be uploaded
-                                else:
-
-                                    uploaded_file = uploaded_files[object_num]
-                                    # st.write(f"this is the last file: {uploaded_file}")
-
-                                    # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
-                                    # what is the filetype of the uploaded file and filename 
-                                    uploaded_file_type = uploaded_file.name.split(".")[-1]
-                                    uploaded_file_name_list = uploaded_file.name.split(".")[:-1]
-                                    uploaded_file_name = " ".join(uploaded_file_name_list)
-                                    # this makes sure that requests are segregated by each user
-                                    user_directory = f'users/{user_hash}/'
-
-                                    logging_filename = f"{uploaded_file_name}_bulk_upload_object_{object_num}_final_notebot_transcription.mp3"
-                                    full_file_path = f'{user_directory}{logging_filename}'
-
-                                    # The name assigned to the CSV file on GCS
-                                    blob = bucket.blob(full_file_path)
-                                    # Upload the file
-                                    uploaded_file.seek(0)
-                                    blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
+                            # The name assigned to the CSV file on GCS
+                            blob = bucket.blob(full_file_path)
+                            # Upload the file
+                            uploaded_file.seek(0)
+                            blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
 
 
 
 
-                            # if len(uploaded_files)<5:
-                            #     st.success(f"Successfully uploaded your audio file {uploaded_file_name}.")
-                            # else:
-                            #     pass
-                            
-                            # add in a timing delay to make sure that the file is uploaded before the next step
-                            time.sleep(2)
+                    # if len(uploaded_files)<5:
+                    #     st.success(f"Successfully uploaded your audio file for fast job {uploaded_file_name}.")
+                    # else:
+                    #     pass
+                    
+                    # add in a timing delay to make sure that the file is uploaded before the next step
+                    st.success("Successfully uploaded your file(s)")
+                    # pass
 
-                            st.success("Successfully uploaded your file(s)")
+                
+                    # st.session_state.files_uploaded = True
+                    # st.stop()  # Stop execution here after upload
 
-                            # pass
-                            st.session_state.files_uploaded = True
-                            # st.stop()  # Stop execution here after upload
+                    with tempfile.TemporaryDirectory() as temp_dir:
 
-                            with tempfile.TemporaryDirectory() as temp_dir:
+                        results_df = get_transcription_from_gcs(user_hash)
 
-                                results_df = get_transcription_from_gcs(user_hash)
+                        # convert string to downloadable csv from streamlit with download button
+                        csv = results_df.to_csv(index=False)
+                        st.download_button(
+                            label="Download Transcription",
+                            data=csv,
+                            file_name=f"bulk_transcription_job.csv",
+                            mime="text/csv",
+                            key="fast_job_download"
+                        )
+                        completed_status = True
 
-                                # convert string to downloadable csv from streamlit with download button
-                                csv = results_df.to_csv(index=False)
-                                st.download_button(
-                                    label="Download Transcription",
-                                    data=csv,
-                                    file_name=f"bulk_transcription_job.csv",
-                                    mime="text/csv",
-                                    key="regular_job_download"
-                                )
-                                completed_status = True
+                        st.success("Successfully processed your bulk audio files!")
+                    # st.stop()
 
-                                st.success("Successfully processed your bulk audio files!")
+                elif fast_job_status_code == 0:
+                    for object_num in range(len(uploaded_files)):
+                        if object_num != number_of_files:
+                            uploaded_file = uploaded_files[object_num]
+                            # st.write(f"this is not the last file: {uploaded_file}")
+
+                            # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
+                            # what is the filetype of the uploaded file and filename 
+                            uploaded_file_type = uploaded_file.name.split(".")[-1]
+                            uploaded_file_name_list = uploaded_file.name.split(".")[:-1]
+                            uploaded_file_name = " ".join(uploaded_file_name_list)
+                            # this makes sure that requests are segregated by each user
+                            user_directory = f'users/{user_hash}/'
+
+                            logging_filename = f"{uploaded_file_name}_bulk_upload_object_{object_num}_notebot_transcription.mp3"
+                            full_file_path = f'{user_directory}{logging_filename}'
+
+                            # The name assigned to the CSV file on GCS
+                            blob = bucket.blob(full_file_path)
+                            # Upload the file
+                            uploaded_file.seek(0)
+
+                            blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
+                        # for the last file in the list we will flag that it is the final file as this will be the last file to be uploaded
+                        else:
+
+                            uploaded_file = uploaded_files[object_num]
+                            # st.write(f"this is the last file: {uploaded_file}")
+
+                            # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
+                            # what is the filetype of the uploaded file and filename 
+                            uploaded_file_type = uploaded_file.name.split(".")[-1]
+                            uploaded_file_name_list = uploaded_file.name.split(".")[:-1]
+                            uploaded_file_name = " ".join(uploaded_file_name_list)
+                            # this makes sure that requests are segregated by each user
+                            user_directory = f'users/{user_hash}/'
+
+                            logging_filename = f"{uploaded_file_name}_bulk_upload_object_{object_num}_final_notebot_transcription.mp3"
+                            full_file_path = f'{user_directory}{logging_filename}'
+
+                            # The name assigned to the CSV file on GCS
+                            blob = bucket.blob(full_file_path)
+                            # Upload the file
+                            uploaded_file.seek(0)
+                            blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
+
+
+
+
+                    # if len(uploaded_files)<5:
+                    #     st.success(f"Successfully uploaded your audio file {uploaded_file_name}.")
+                    # else:
+                    #     pass
+                    
+                    # add in a timing delay to make sure that the file is uploaded before the next step
+                    time.sleep(2)
+
+                    st.success("Successfully uploaded your file(s)")
+
+                    # pass
+                    st.session_state.files_uploaded = True
+                    # st.stop()  # Stop execution here after upload
+
+                    with tempfile.TemporaryDirectory() as temp_dir:
+
+                        results_df = get_transcription_from_gcs(user_hash)
+
+                        # convert string to downloadable csv from streamlit with download button
+                        csv = results_df.to_csv(index=False)
+                        st.download_button(
+                            label="Download Transcription",
+                            data=csv,
+                            file_name=f"bulk_transcription_job.csv",
+                            mime="text/csv",
+                            key="regular_job_download"
+                        )
+                        completed_status = True
+
+                        st.success("Successfully processed your bulk audio files!")
 st.stop()
 
 # st.stop()
