@@ -750,7 +750,7 @@ if submit_button:
                                 # convert string to downloadable csv from streamlit with download button
                                 csv = results_df.to_csv(index=False)
                                 st.download_button(
-                                    label="Download Transcription",
+                                    label="Download Transcription ",
                                     data=csv,
                                     file_name=f"bulk_transcription_job.csv",
                                     mime="text/csv",
@@ -760,7 +760,7 @@ if submit_button:
                                 st.success("Successfully processed your bulk audio files!")
                             # st.stop()
 
-                        else:
+                        elif fast_job_status_code == 0:
                             for object_num in range(len(uploaded_files)):
                                 if object_num != number_of_files:
                                     uploaded_file = uploaded_files[object_num]
