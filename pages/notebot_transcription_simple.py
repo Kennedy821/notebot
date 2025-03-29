@@ -175,7 +175,7 @@ def check_status_of_fast_processing():
     csv_string = fast_job_df.to_csv(index=False)
     blob.upload_from_string(csv_string)
 
-    time.sleep(10)
+    time.sleep(20)
 
     # check if the new response file exists in gcs 
     FILE_SUFFIX = "fast_job_status_verified.csv"
