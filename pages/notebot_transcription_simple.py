@@ -636,7 +636,7 @@ if submit_button:
                             # convert string to downloadable csv from streamlit with download button
                             csv = results_df.to_csv(index=False)
                             st.download_button(
-                                label="Download Transcription",
+                                label="Download Fast Job Transcription",
                                 data=csv,
                                 file_name=f"{uploaded_file_name}.csv",
                                 mime="text/csv",
@@ -750,10 +750,11 @@ if submit_button:
                                 # convert string to downloadable csv from streamlit with download button
                                 csv = results_df.to_csv(index=False)
                                 st.download_button(
-                                    label="Download Transcription ",
+                                    label="Download Transcription",
                                     data=csv,
                                     file_name=f"bulk_transcription_job.csv",
                                     mime="text/csv",
+                                    key="fast_job_download"
                                 )
                                 completed_status = True
 
@@ -834,6 +835,7 @@ if submit_button:
                                     data=csv,
                                     file_name=f"bulk_transcription_job.csv",
                                     mime="text/csv",
+                                    key="regular_job_download"
                                 )
                                 completed_status = True
 
