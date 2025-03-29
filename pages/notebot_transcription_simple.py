@@ -125,6 +125,9 @@ st.title("Notebot: Transcription")
 if 'messages' not in st.session_state:
     st.session_state['messages'] = []
 
+if 'files_uploaded' not in st.session_state:
+    st.session_state.files_uploaded = False
+
 def delete_csv_file(file_name, bucket_name=st.secrets["notebot"]["bucket_name"]):
     """
     Delete a file from Google Cloud Storage bucket.
@@ -733,6 +736,10 @@ if submit_button:
                             #     pass
                             
                             # add in a timing delay to make sure that the file is uploaded before the next step
+                            st.success("Successfully uploaded your file(s)")
+                            pass
+                            st.session_state.files_uploaded = True
+                            st.stop()  # Stop execution here after upload
 
                         else:
                             for object_num in range(len(uploaded_files)):
@@ -791,7 +798,11 @@ if submit_button:
                             # add in a timing delay to make sure that the file is uploaded before the next step
                             time.sleep(2)
 
-                st.success("Successfully uploaded your file(s)")
+                            st.success("Successfully uploaded your file(s)")
+
+                            pass
+                            st.session_state.files_uploaded = True
+                            st.stop()  # Stop execution here after upload
 
                 with tempfile.TemporaryDirectory() as temp_dir:
 
