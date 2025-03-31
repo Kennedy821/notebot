@@ -518,10 +518,10 @@ if submit_button:
         fast_job_status = check_status_of_fast_processing()
 
         if fast_job_status == 1:
-            st.success("Fast job is active, please wait for the job to complete")
+            # st.success("Fast job is active, please wait for the job to complete")
             fast_job_status_code = 1
         else:
-            st.success("Fast job is not active, please wait for the job to complete")
+            # st.success("Fast job is not active, please wait for the job to complete")
             fast_job_status_code = 0
         # except Exception as e:
         #     st.write(f"An error occurred while checking the status of the fast job: {e}")
