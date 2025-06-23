@@ -1,169 +1,48 @@
 import streamlit as st
 import streamlit.components.v1 as components
 from pathlib import Path
+import sounddevice as sd
+import soundfile as sf
 import numpy as np
 import tempfile
 import time
-import fitz
-import tempfile
-from google.oauth2 import service_account
-from google.cloud import storage
-from PIL import Image
-import jwt
-import pandas as pd
-import logging
-
-im = Image.open('slug_logo.png')
-st.set_page_config(
-    page_title="Hello",
-    page_icon=im,
-)
-
-st.markdown(
-    """
-    <style>
-    .black-text {
-        color: #37474F;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-SECRET_KEY = st.secrets["general"]["SECRET_KEY"]
-
-# Decode and verify JWT token
-def verify_token(token):
-    try:
-        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        return decoded_token
-    except jwt.InvalidTokenError:
-        return None
-
-
-# Here is the new code to get the query parameters
-
-query_params = st.query_params.get("token")
-
-token = st.query_params.token
-
-# Set token after login
-st.session_state['token'] = token
-
-if token:
-    # decoded_token = verify_token(token)
-
-
-# if 'token' in query_params:
-#     token = query_params.get('token')[0]  # Get the token from the query
-    decoded_token = verify_token(token)
-
-    if decoded_token:
-        user_email = str(decoded_token).split(":")[1].split("'")[1]
-        
-        st.success(f"Access granted! Welcome, {user_email}.")
-        st.write(f"Your account: {user_email}")
-
-user_hash = token
+# from gtts import gTTS
+import collections
+import threading
+import queue
+import base64
+from pydub import AudioSegment
+from TTS.api import TTS
+import fitz  # PyMuPDF
 
 
 
 
-# make a function that can upload a file to gcs
-def upload_file_to_gcs(file, bucket_name, blob_name):
-    # Initialize the GCS client
-    # Create credentials object
-    credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
-
-    # Use the credentials to create a client
-    client = storage.Client(credentials=credentials)
 
 
-    # The bucket on GCS in which to write the CSV file
-    bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
-
-    
-    #-----------------------------------------------------------------------------------------------------
 
 
-    # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
-    # what is the filetype of the uploaded file and filename 
-    uploaded_file_type = file.name.split(".")[-1]
-    uploaded_file_name = file.name.split(".")[0]
-
-    # this makes sure that requests are segregated by each user
-    user_directory = f'users/{user_hash}/'
-
-    logging_filename = f"{uploaded_file_name}.pdf"
-    full_file_path = f'{user_directory}{logging_filename}'
-
-    # The name assigned to the CSV file on GCS
-    blob = bucket.blob(full_file_path)
-    # Upload the file
-    blob.upload_from_file(uploaded_file, content_type=uploaded_file.type)
-    print(f"File saved successfully in GCS bucket under '{logging_filename}'.")
-
-def upload_csv_to_gcs(dataframe, bucket_name, blob_name):
-    # Initialize the GCS client
-    credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
-    client = storage.Client(credentials=credentials)
-    bucket = client.bucket(bucket_name)
-    
-    # convert the dataframe to a csv
-    csv_data = dataframe.to_csv(index=False)
-    blob = bucket.blob(blob_name)
-    blob.upload_from_string(csv_data, content_type="csv")
-
-# download an mp3 file from gcs
-def download_mp3_file_from_gcs(bucket_name, blob_name, file_path):
-    # Initialize the GCS client
-    credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
-    client = storage.Client(credentials=credentials)
-    bucket = client.bucket(bucket_name)
-    blob = bucket.blob(blob_name)
-    blob.download_to_filename(file_path)
-    print(f"File '{file_path}' downloaded successfully from GCS bucket '{bucket_name}' under '{blob_name}'.")
-
-# define a function that will periodically check for the mp3 file in the gcs bucket
-def check_for_wav_file_in_gcs(blob_name):
-    # Initialize the GCS client
-    credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
-
-    # Use the credentials to create a client
-    client = storage.Client(credentials=credentials)
 
 
-    # The bucket on GCS in which to write the CSV file
-    bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
-    blob = bucket.blob(blob_name)
-    if blob.exists():
-        return True
-    else:
-        return False
 
-def clear_legacy_files(user_hash, filename):
-    """
-    Clear legacy files from GCS bucket for a specific user
-    Args:
-        user_hash (str): User identifier
-        filename (str): Name of file to delete
-    """
-    try:
-        # Initialize the GCS client
-        credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
-        client = storage.Client(credentials=credentials)
-        bucket = client.bucket(st.secrets["gcp_bucket"]["application_bucket"])
-        
-        # Create the full path and delete the blob
-        blob_path = f"users/{user_hash}/{filename}"
-        blob = bucket.blob(blob_path)
-        blob.delete()
-        print(f"Deleted {blob_path} from bucket.")
-    except Exception as e:
-        print(f"Error deleting {blob_path}: {e}")
 
+
+# Load the TTS model 
+model_path = "/Users/tariromashongamhende/Documents/Documents - Tariro’s MacBook Pro/ml_projects/project_siren/tts_model_vanilla/best_model_420645.pth"
+config_path = "/Users/tariromashongamhende/Documents/Documents - Tariro’s MacBook Pro/ml_projects/project_siren/tts_model_vanilla/config_tts.json"
+
+tts = TTS(model_path=model_path, config_path=config_path)
+base_dir = "/Users/tariromashongamhende/Downloads/combination_bea/"
+speaker_samples = [base_dir+x for x in os.listdir(base_dir) if "DS" not in x][:]
+speaker_samples
+# Set device (CUDA for GPU, 'cpu' for CPU)
+try:
+  tts.to('cuda')  # or use 'cpu' if no GPU available
+except:
+  tts.to('cpu')
 
 # load the structure of the streamlit webpage
+st.set_page_config(page_title="Reader", page_icon=":material/volume_up:", layout="wide")
 st.title("Reader")
 
 # display a file uploader widget for pdf files
@@ -174,77 +53,43 @@ if st.button("Generate Audio"):
     with st.spinner("Generating audio..."):
         # check if a file has been uploaded
         if uploaded_file is not None:
-            
-            # before processing the provided file we will clear the bucke of any legacy files
-            try:
-                
-                clear_legacy_files(user_hash, "notebot_reader_uploaded_file.wav")
-                clear_legacy_files(user_hash, "reader_uploaded_file.csv")
-
-                time.sleep(10)
-            except Exception as e:
-                logging.error(f"Error deleting reader_uploaded_file: {e}")
-
-            
-
-            # upload the pdf file to gcs
-            # make the filename to upload
-            uploaded_file_name = f"users/{user_hash}/reader_uploaded_file.pdf"
-            upload_file_to_gcs(uploaded_file, st.secrets["gcp_bucket"]["application_bucket"], uploaded_file_name)
-            
+            # load the pdf file and iterate through the pages and then join them together in a dataframe
             # process the pdf 
             pdf_page_container = []
 
-            # Create a temporary file to properly handle the PDF
-            with tempfile.NamedTemporaryFile(suffix='.pdf') as temp_pdf:
-                # Write the uploaded file content to the temporary file
-                temp_pdf.write(uploaded_file.getvalue())
-                temp_pdf.flush()  # Ensure all data is written
-                
-                # Open the PDF from the temporary file
-                doc = fitz.open(temp_pdf.name)
+            # Read the content of the uploaded file
+            pdf_content = uploaded_file.read()
 
-                for page_num in range(len(doc)):
-                    page = doc.load_page(page_num)
-                    text = page.get_text("text")
-                    pdf_page_container.append(text)
+            # Open the PDF from the content
+            doc = fitz.open(stream=pdf_content, filetype="pdf")
 
-                # Close the document
-                doc.close()
+            for page_num in range(len(doc)):
+                page = doc.load_page(page_num)
+                text = page.get_text("text")
+                pdf_page_container.append(text)
+
+            # Close the document
+            doc.close()
 
             # join the text from the pdf
             text = " ".join(pdf_page_container)
 
-            # create a dataframe from the text
-            dataframe = pd.DataFrame({"text": [text]})
- #
+        with tempfile.TemporaryDirectory() as temp_dir:
 
+            # Generate speech
+            output_wav_path = "reader_output.wav"
+            text_to_speak = text
 
+            # tts.tts_to_file(text=text_to_speak, file_path=output_wav_path,speed = 1)
 
+            tts.tts_with_vc_to_file(
+                text_to_speak,
+                speaker_wav=speaker_samples[:500],
+                file_path=output_wav_path,
+            )
 
+            # st.write(f"Speech saved to {output_wav_path}")
 
-            # upload the csv file to gcs
-            uploaded_csv_name = f"users/{user_hash}/reader_uploaded_file.csv"
-            upload_csv_to_gcs(dataframe, st.secrets["gcp_bucket"]["application_bucket"], uploaded_csv_name)
-            
-            
-            # iteratively check if the mp3 file exists in the gcs bucket
-            # Keep checking for the MP3 file every 10 seconds
-            while not check_for_wav_file_in_gcs(f"users/{user_hash}/notebot_reader_uploaded_file.wav"):
-                time.sleep(10)
-                # st.write("Waiting for audio file to be ready...")
-            
-            st.success("Finished processing file")
-            with tempfile.TemporaryDirectory() as temp_dir:
-           
-              # Once found, download the MP3 file
-              local_wav_path = f"{temp_dir}/notebot_reader_uploaded_file.wav"
-              download_mp3_file_from_gcs(
-                  st.secrets["gcp_bucket"]["application_bucket"],
-                  f"users/{user_hash}/notebot_reader_uploaded_file.wav",
-                  local_wav_path
-              )
-              # Generate speech
-              # output_wav_path = "reader_output.wav"
-
-              st.audio(local_wav_path)
+            # play the audio
+            # audio = AudioSegment.from_wav(output_wav_path)
+            st.audio(output_wav_path)
