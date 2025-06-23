@@ -106,13 +106,17 @@ if st.button("Generate Audio"):
                 #                         )
                 
                 audio_resp = tts_to_file(text=text_to_speak, api_url=model_api, out_path=output_wav_path)
-                # st.audio(audio_resp)
-                # save the audio file to the output path
-                with open(output_wav_path, "wb") as f:
-                    f.write(audio_resp.content)
+                st.audio(audio_resp)
 
-                # st.write(f"Speech saved to {output_wav_path}")
 
-                # play the audio
-                # audio = AudioSegment.from_wav(output_wav_path)
-                st.audio(output_wav_path)
+
+
+                # # save the audio file to the output path
+                # with open(output_wav_path, "wb") as f:
+                #     f.write(audio_resp.content)
+
+                # # st.write(f"Speech saved to {output_wav_path}")
+
+                # # play the audio
+                # # audio = AudioSegment.from_wav(output_wav_path)
+                # st.audio(output_wav_path)
