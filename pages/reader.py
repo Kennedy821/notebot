@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit.components.v1 as components
 from pathlib import Path
-import sounddevice as sd
+# import sounddevice as sd
 import soundfile as sf
 import numpy as np
 import tempfile
