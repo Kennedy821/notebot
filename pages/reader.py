@@ -11,8 +11,8 @@ import collections
 import threading
 import queue
 import base64
-from pydub import AudioSegment
-from TTS.api import TTS
+# from pydub import AudioSegment
+# from TTS.api import TTS
 import fitz  # PyMuPDF
 import os
 import requests
