@@ -14,6 +14,8 @@ import base64
 from pydub import AudioSegment
 from TTS.api import TTS
 import fitz  # PyMuPDF
+import os
+import requests
 
 
 
@@ -25,21 +27,11 @@ import fitz  # PyMuPDF
 
 
 
-
-
-# Load the TTS model 
-model_path = "/Users/tariromashongamhende/Documents/Documents - Tariro’s MacBook Pro/ml_projects/project_siren/tts_model_vanilla/best_model_420645.pth"
-config_path = "/Users/tariromashongamhende/Documents/Documents - Tariro’s MacBook Pro/ml_projects/project_siren/tts_model_vanilla/config_tts.json"
-
-tts = TTS(model_path=model_path, config_path=config_path)
-base_dir = "/Users/tariromashongamhende/Downloads/combination_bea/"
-speaker_samples = [base_dir+x for x in os.listdir(base_dir) if "DS" not in x][:]
-speaker_samples
-# Set device (CUDA for GPU, 'cpu' for CPU)
-try:
-  tts.to('cuda')  # or use 'cpu' if no GPU available
-except:
-  tts.to('cpu')
+# # Set device (CUDA for GPU, 'cpu' for CPU)
+# try:
+#   tts.to('cuda')  # or use 'cpu' if no GPU available
+# except:
+#   tts.to('cpu')
 
 # load the structure of the streamlit webpage
 st.set_page_config(page_title="Reader", page_icon=":material/volume_up:", layout="wide")
@@ -81,12 +73,15 @@ if st.button("Generate Audio"):
             text_to_speak = text
 
             # tts.tts_to_file(text=text_to_speak, file_path=output_wav_path,speed = 1)
-
-            tts.tts_with_vc_to_file(
-                text_to_speak,
-                speaker_wav=speaker_samples[:500],
-                file_path=output_wav_path,
-            )
+            # we're going to use the API instead for the reader
+            model_api = st.secrets["voice_models"]["model_api"]
+            audio_resp = requests.post(
+                                        model_api,
+                                        json={"text": str(text_to_speak)}
+                                    )
+            # save the audio file to the output path
+            with open(output_wav_path, "wb") as f:
+                f.write(audio_resp.content)
 
             # st.write(f"Speech saved to {output_wav_path}")
 
