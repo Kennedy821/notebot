@@ -21,31 +21,31 @@ from pathlib import Path
 
 
 
-def tts_to_file(
-                    text: str,
-                    api_url: str,
-                    out_path: str | Path = "output.wav",
-                    *,
-                    connect_timeout: float = 8.0,     # seconds to establish TCP/TLS
-                    read_timeout: float | None = 300  # seconds to wait for data; None = no limit
-                ) -> Path:
-    """
-    Send text to a TTS endpoint and stream the resulting audio to `out_path`.
-    Returns the Path to the written file or raises `requests.HTTPError`.
-    """
-    payload = {"text": text}
-    timeouts = (connect_timeout, read_timeout)
+# def tts_to_file(
+#                     text: str,
+#                     api_url: str,
+#                     out_path: str | Path = "output.wav",
+#                     *,
+#                     connect_timeout: float = 8.0,     # seconds to establish TCP/TLS
+#                     read_timeout: float | None = 300  # seconds to wait for data; None = no limit
+#                 ) -> Path:
+#     """
+#     Send text to a TTS endpoint and stream the resulting audio to `out_path`.
+#     Returns the Path to the written file or raises `requests.HTTPError`.
+#     """
+#     payload = {"text": text}
+#     timeouts = (connect_timeout, read_timeout)
 
-    with requests.post(api_url, json=payload, stream=True, timeout=timeouts) as resp:
-        resp.raise_for_status()        # bubble up 4xx/5xx early
+#     with requests.post(api_url, json=payload, stream=True, timeout=timeouts) as resp:
+#         resp.raise_for_status()        # bubble up 4xx/5xx early
 
-        out_path = Path(out_path).expanduser()
-        with out_path.open("wb") as f:
-            for chunk in resp.iter_content(chunk_size=8192):
-                if chunk:              # skip keep-alive chunks
-                    f.write(chunk)
+#         out_path = Path(out_path).expanduser()
+#         with out_path.open("wb") as f:
+#             for chunk in resp.iter_content(chunk_size=8192):
+#                 if chunk:              # skip keep-alive chunks
+#                     f.write(chunk)
 
-    return out_path
+#     return out_path
 
 
 
