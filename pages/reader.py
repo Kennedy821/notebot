@@ -99,13 +99,13 @@ if st.button("Generate Audio"):
                 # tts.tts_to_file(text=text_to_speak, file_path=output_wav_path,speed = 1)
                 # we're going to use the API instead for the reader
                 model_api = st.secrets["voice_models"]["model_api"]
-                # audio_resp = requests.post(
-                #                             model_api,
-                #                             json={"text": text_to_speak},
-                #                             timeout=600
-                #                         )
+                audio_resp = requests.post(
+                                            model_api,
+                                            json={"text": text_to_speak},
+                                            timeout=600
+                                        )
                 
-                audio_resp = tts_to_file(text=text_to_speak, api_url=model_api, out_path=output_wav_path)
+                # audio_resp = tts_to_file(text=text_to_speak, api_url=model_api, out_path=output_wav_path)
                 st.audio(audio_resp)
 
 
