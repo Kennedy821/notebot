@@ -110,7 +110,7 @@ if st.button("Generate Audio"):
                     wav_list.append(audio_resp)
                 
                 # audio_resp = tts_to_file(text=text_to_speak, api_url=model_api, out_path=output_wav_path)
-                st.audio(audio_resp)
+                # st.audio(audio_resp)
 
             combined_wav = np.concatenate(wav_list)
             st.audio(combined_wav)
