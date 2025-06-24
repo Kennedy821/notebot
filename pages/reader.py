@@ -121,7 +121,11 @@ if st.button("Generate Audio"):
                 # st.audio(audio_resp)
 
             combined_wav = np.concatenate(wav_list)
-            st.audio(combined_wav)
+            output_wav_path = "reader_output.wav"
+            with open(output_wav_path, "wb") as f:
+                sf.write(f, combined_wav, 22050)
+                
+            st.audio(output_wav_path)   
 
 
 
