@@ -2,7 +2,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 from pathlib import Path
 # import sounddevice as sd
-# import soundfile as sf
+import soundfile as sf
 import numpy as np
 import tempfile
 import time
@@ -105,14 +105,17 @@ if st.button("Generate Audio"):
                 for text_to_speak in pdf_page_container[:2]:
                     audio_resp = requests.post(
                                                 model_api,
-                                                json={"text": text_to_speak},
+                                                json={"text": text_to_speak[:100]},
                                                 timeout=600
                                             )
-                    # output_wav_path = f"reader_output_{counter}.wav"
-                    # with open(output_wav_path, "wb") as f:
-                    #     f.write(audio_resp.content)
-                    # counter += 1
-                    wav_list.append(audio_resp.content)
+                    output_wav_path = f"reader_output_{counter}.wav"
+                    with open(output_wav_path, "wb") as f:
+                        f.write(audio_resp.content)
+                        time.sleep(2)
+                        wav, _ = sf.read(output_wav_path, dtype="float64")  # 44 100 Hz
+
+                        counter += 1
+                        wav_list.append(audio_resp.content)
                 
                 # audio_resp = tts_to_file(text=text_to_speak, api_url=model_api, out_path=output_wav_path)
                 # st.audio(audio_resp)
