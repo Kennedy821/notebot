@@ -101,13 +101,18 @@ if st.button("Generate Audio"):
                 # we're going to use the API instead for the reader
                 
                 model_api = st.secrets["voice_models"]["model_api"]
+                counter = 0
                 for text_to_speak in pdf_page_container[:2]:
                     audio_resp = requests.post(
                                                 model_api,
                                                 json={"text": text_to_speak},
                                                 timeout=600
                                             )
-                    wav_list.append(audio_resp)
+                    # output_wav_path = f"reader_output_{counter}.wav"
+                    # with open(output_wav_path, "wb") as f:
+                    #     f.write(audio_resp.content)
+                    # counter += 1
+                    wav_list.append(audio_resp.content)
                 
                 # audio_resp = tts_to_file(text=text_to_speak, api_url=model_api, out_path=output_wav_path)
                 # st.audio(audio_resp)
