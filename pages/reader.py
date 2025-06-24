@@ -106,7 +106,7 @@ if st.button("Generate Audio"):
                 progress_bar = st.progress(0)
 
                 total_iterations = len(pdf_page_container)
-                for text_to_speak in pdf_page_container[:2]:
+                for text_to_speak in pdf_page_container[:]:
                     audio_resp = requests.post(
                                                 model_api,
                                                 json={"text": text_to_speak[:]},
