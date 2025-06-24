@@ -115,7 +115,7 @@ if st.button("Generate Audio"):
                         wav, _ = sf.read(output_wav_path, dtype="float64")  # 44 100 Hz
 
                         counter += 1
-                        wav_list.append(audio_resp.content)
+                        wav_list.append(wav)
                 
                 # audio_resp = tts_to_file(text=text_to_speak, api_url=model_api, out_path=output_wav_path)
                 # st.audio(audio_resp)
