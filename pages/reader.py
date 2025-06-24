@@ -102,7 +102,11 @@ if st.button("Generate Audio"):
                 
                 model_api = st.secrets["voice_models"]["model_api"]
                 counter = 0
-                for text_to_speak in pdf_page_container[:]:
+                # we're going to addd in a streamlit progress bar
+                progress_bar = st.progress(0)
+
+
+                for text_to_speak in pdf_page_container[:2]:
                     audio_resp = requests.post(
                                                 model_api,
                                                 json={"text": text_to_speak[:100]},
@@ -116,7 +120,8 @@ if st.button("Generate Audio"):
 
                         counter += 1
                         wav_list.append(wav)
-                
+                    progress_bar.progress(counter / len(pdf_page_container))
+
                 # audio_resp = tts_to_file(text=text_to_speak, api_url=model_api, out_path=output_wav_path)
                 # st.audio(audio_resp)
 
