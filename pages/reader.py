@@ -116,10 +116,14 @@ if st.button("Generate Audio"):
                     with open(output_wav_path, "wb") as f:
                         f.write(audio_resp.content)
                         time.sleep(2)
-                        wav, _ = sf.read(output_wav_path, dtype="float64")  # 44 100 Hz
+                        try:
+                            wav, _ = sf.read(output_wav_path, dtype="float64")  # 44 100 Hz
 
-                        counter += 1
-                        wav_list.append(wav)
+                            counter += 1
+                            wav_list.append(wav)
+                        except Exception as e:
+                            print(e)
+                        
                     progress_bar.progress(counter / total_iterations)
 
                 # audio_resp = tts_to_file(text=text_to_speak, api_url=model_api, out_path=output_wav_path)
