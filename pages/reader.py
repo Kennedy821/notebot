@@ -105,11 +105,11 @@ if st.button("Generate Audio"):
                 # we're going to addd in a streamlit progress bar
                 progress_bar = st.progress(0)
 
-
+                total_iterations = len(pdf_page_container)
                 for text_to_speak in pdf_page_container[:2]:
                     audio_resp = requests.post(
                                                 model_api,
-                                                json={"text": text_to_speak[:100]},
+                                                json={"text": text_to_speak[:]},
                                                 timeout=600
                                             )
                     output_wav_path = f"reader_output_{counter}.wav"
@@ -120,7 +120,7 @@ if st.button("Generate Audio"):
 
                         counter += 1
                         wav_list.append(wav)
-                    progress_bar.progress(counter / len(pdf_page_container))
+                    progress_bar.progress(counter / total_iterations)
 
                 # audio_resp = tts_to_file(text=text_to_speak, api_url=model_api, out_path=output_wav_path)
                 # st.audio(audio_resp)
