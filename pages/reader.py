@@ -102,7 +102,7 @@ if st.button("Generate Audio"):
                 
                 model_api = st.secrets["voice_models"]["model_api"]
                 counter = 0
-                for text_to_speak in pdf_page_container[:2]:
+                for text_to_speak in pdf_page_container[:]:
                     audio_resp = requests.post(
                                                 model_api,
                                                 json={"text": text_to_speak[:100]},
