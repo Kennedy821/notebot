@@ -6,7 +6,7 @@ google-cloud-storage  # For google.cloud.storage
 pandas
 openai-whisper
 #pytube
-# openai
+openai
 tiktoken
 #moviepy
 pymupdf  # For fitz (PyMuPDF)
