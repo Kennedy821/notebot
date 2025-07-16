@@ -1,6 +1,6 @@
 # import whisper
 import os
-from pytube import YouTube, Playlist
+# from pytube import YouTube, Playlist
 import streamlit as st
 import openai
 # import tensorflow as tf
@@ -8,7 +8,6 @@ import openai
 import pandas as pd
 # import geopandas as gp
 # import h3
-import openai
 # from shapely.geometry import Polygon
 from openai import OpenAI
 import os
