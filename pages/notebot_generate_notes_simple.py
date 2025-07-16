@@ -1,4 +1,4 @@
-import whisper
+# import whisper
 import os
 from pytube import YouTube, Playlist
 import streamlit as st
