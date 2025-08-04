@@ -1,6 +1,6 @@
-# import whisper
+import whisper
 import os
-# from pytube import YouTube, Playlist
+from pytube import YouTube, Playlist
 import streamlit as st
 import openai
 # import tensorflow as tf
@@ -8,6 +8,7 @@ import openai
 import pandas as pd
 # import geopandas as gp
 # import h3
+import openai
 # from shapely.geometry import Polygon
 from openai import OpenAI
 import os
@@ -31,6 +32,7 @@ import jwt
 import time
 import tempfile
 from bs4 import BeautifulSoup
+import requests
 
 im = Image.open('slug_logo.png')
 st.set_page_config(
@@ -833,7 +835,19 @@ if submit_button and uploaded_file:
         # check the backend for the detailed notes 
         with tempfile.TemporaryDirectory() as temp_dir:
 
-            detailed_notes_string = get_detailed_notes_from_gcs(user_hash)
+            # detailed_notes_string = get_detailed_notes_from_gcs(user_hash) # this was the old way of getting the detailed notes
+            uploaded_file_string = extract_text_from_pdf(uploaded_file)
+            # test the detailed notes
+            payload = {
+                        "text": uploaded_file_string
+                    }
+            base_api_web_address = "https://cd38ae4972e0.ngrok-free.app"
+            r = requests.post(base_api_web_address+"/get_notebot_detailed_notes", json=payload, timeout=120)
+            if r.ok:
+                detailed_notes_string = r.json()["detailed_notes"]
+            else:
+                print(r.status_code)
+                pass
 
         if len(detailed_notes_string)>0:
             with st.expander("Here are your detailed notes"):
@@ -948,7 +962,18 @@ if submit_button and uploaded_file:
             # check the backend for the detailed notes 
         with tempfile.TemporaryDirectory() as temp_dir:
 
-            summary_notes_string = get_summary_notes_from_gcs(user_hash)
+            # summary_notes_string = get_summary_notes_from_gcs(user_hash) # this was the old way of getting the summary notes
+                        # test the detailed notes
+            payload = {
+                        "text": detailed_notes_string
+                    }
+            base_api_web_address = "https://cd38ae4972e0.ngrok-free.app"
+            r = requests.post(base_api_web_address+"/get_notebot_summary_notes", json=payload, timeout=120)
+            if r.ok:
+                summary_notes_string = r.json()["summary_notes"]
+            else:
+                print(r.status_code)
+                pass
         with st.expander("Here is your high level summary"):
             st.markdown(summary_notes_string)
                 # the code below will be deprecated and will work by receiving a file from backend loading that file and displaying the detailed notes
