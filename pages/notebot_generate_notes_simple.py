@@ -1,6 +1,6 @@
-import whisper
-import os
-from pytube import YouTube, Playlist
+# import whisper
+# import os
+# from pytube import YouTube, Playlist
 import streamlit as st
 import openai
 # import tensorflow as tf
@@ -724,114 +724,6 @@ submit_button = st.button(label='Make me some notes')
 if submit_button and uploaded_file:
     with st.spinner("Processing your notes"):
 
-
-
-
-
-
-
-
-        # the following code section will be a change to upload the file to the backend using the user's credentials
-
-
-        # next get the uploaded object ready to be uploaded by renaming it and giving it the correct filepath
-        # what is the filetype of the uploaded file and filename 
-        uploaded_file_type = uploaded_file.name.split(".")[-1]
-        uploaded_file_name = uploaded_file.name.split(".")[0]
-
-        # this makes sure that requests are segregated by each user
-        user_directory = f'users/{user_hash}/'
-
-        logging_filename = f"{uploaded_file_name}_notebot_note_generation.pdf"
-        full_file_path = f'{user_directory}{logging_filename}'
-
-
-        # now upload the pdf to the backend using the user's credentials
-        upload_pdf_to_gcs(st.secrets["notebot"]["bucket_name"], uploaded_file, full_file_path)
-
-
-
-
-
-
-
-
-
-
-
-    # # --------------------------------------------------
-
-
-    #     # if the uploaded file is a parquet then load the dataframe
-    #     uploaded_file_suffix = uploaded_file.name.split(".")[-1]
-    #     uploaded_file_name = uploaded_file.name.split(".")[0]
-
-
-
-
-    #     if uploaded_file_suffix == 'gzip':
-    #         df = pd.read_parquet(uploaded_files[0])
-    #         uploaded_text_string = df.lecture_notes.values[0]
-
-    #     elif uploaded_file_suffix == 'pdf':
-
-    #         uploaded_text_string = extract_text_from_pdf(uploaded_files[0])  
-
-    #     with st.spinner(':grey[Generating your notes...]'):
-
-    #         transcripts_dir = f"/Users/tariromashongamhende/Documents/Documents - Tariro’s MacBook Pro/ml_projects/notebot/Transcripts/{topic_chosen}/"
-    #         max_fuzz_score_in_transcripts_directory = get_most_similar_fuzz_ratio_of_file_in_directory(uploaded_file_name, transcripts_dir)
-    #         st.markdown(f"the max fuzz score is {max_fuzz_score_in_transcripts_directory}")
-            
-    #         if max_fuzz_score_in_transcripts_directory<60:
-
-    #             save_transcript(category="Transcripts", topic=topic_chosen, file_name=uploaded_file_name, file_content=uploaded_text_string)
-    #         else:
-    #             st.info(f"Transcript for {uploaded_file_name} already exists in the {topic_chosen} topic folder")
-    #             pass
-
-    #         import time
-    #         bag_of_model_result_chunks = []
-
-    #         safe_chunk_increment = 40000
-    #         lower_bound = 0
-    #         upper_bound = lower_bound + safe_chunk_increment
-
-    #         number_of_estimated_chunks_of_input_string = round((len(uploaded_text_string)/upper_bound))+1
-
-    #         input_lecture_notes = uploaded_text_string
-
-    #         progress_bar = st.progress(0, text=":grey[Generating you some notes!]")
-
-    #         # st.markdown(number_of_estimated_chunks_of_input_string)
-    #         for i in range(0,number_of_estimated_chunks_of_input_string):
-    #             # print(f"lower bound: {lower_bound}")
-    #             # print(f"upper bound: {upper_bound}")
-
-    #             # send the query to gpt-4o
-    #             # progress_bar.progress(i/number_of_estimated_chunks_of_input_string)
-
-    #             # st.markdown(input_lecture_notes[lower_bound:upper_bound])
-    #             if len(input_lecture_notes[lower_bound:upper_bound])>300:
-    #                 gpt_4_prompt_response = get_gpt4_response("Help me understand what was in the lecture I just had?", input_lecture_notes,lower_bound, upper_bound)
-    #                 gpt_4_prompt_response = '\n'.join(gpt_4_prompt_response.split('\n')[1:])
-    #                 gpt_4_prompt_response = gpt_4_prompt_response.replace("Question:","\nQuestion:").replace("Evidence:","\nEvidence:").replace("Answer:","\nAnswer:")
-    #                 # st.markdown('\n'.join(gpt_4_prompt_response.split('\n')[1:]))
-    #                 bag_of_model_result_chunks.append(gpt_4_prompt_response)
-    #                 print(f"finished processing chunk {i}")
-                    
-    #                 # now add the chunk increment to both the upper and lower bound values
-    #                 lower_bound += safe_chunk_increment
-    #                 upper_bound += safe_chunk_increment
-    #                 time.sleep(65)
-    #             if number_of_estimated_chunks_of_input_string>1:
-    #                 progress_bar.progress(i/(number_of_estimated_chunks_of_input_string-1))
-    #             else:
-    #                 pass
-
-            # time.sleep(65)
-
-
         # check the backend for the detailed notes 
         with tempfile.TemporaryDirectory() as temp_dir:
 
@@ -841,7 +733,7 @@ if submit_button and uploaded_file:
             payload = {
                         "text": uploaded_file_string
                     }
-            base_api_web_address = "https://cd38ae4972e0.ngrok-free.app"
+            base_api_web_address = st.secrets["general"]["base_api_web_address"]
             r = requests.post(base_api_web_address+"/get_notebot_detailed_notes", json=payload, timeout=120)
             if r.ok:
                 detailed_notes_string = r.json()["detailed_notes"]
@@ -854,111 +746,6 @@ if submit_button and uploaded_file:
                 st.markdown(detailed_notes_string)
 
 
-                    # the code below will be deprecated and will work by receiving a file from backend loading that file and displaying the detailed notes
-
-                    # --------------------------------------------------------------------------------------------- 
-
-
-
-
-
-
-
-
-
-
-
-            #         detailed_llm_reponse_container = []
-            #         for i in bag_of_model_result_chunks:
-            #             int_i = i
-            #             int_i = add_newline_before_bold(int_i)
-            #             # for any case where question, answer or evidence is has ** before or after it we need to remove it
-            #             int_i = int_i.replace("**Question:**","Question:").replace("**Answer:**","Answer:").replace("**Evidence:**","Evidence:").replace("**\nQuestion:**","**Question:**").replace("**\nAnswer:**","**Answer:**").replace("**\nEvidence:**","**Evidence:**").replace("**Question: **","Question:").replace("**Answer: **","Answer:").replace("**Evidence: **","Evidence:").replace("**\nQuestion: **","Question:").replace("**\nAnswer: **","Answer:").replace("**\nEvidence: **","Evidence:")
-            #             st.markdown(int_i)
-                        
-            #             # st.write(f"---------------------------------------------------")
-            #             # st.write(f"original: {i}")
-            #             # st.write(f"---------------------------------------------------")
-            #             # st.write(f"updated: {int_i}")
-            #             detailed_llm_reponse_container.append(int_i)
-
-            #         # Convert Markdown to HTML
-            #         detailed_html_text = markdown2.markdown(add_newline_before_bold(''.join(detailed_llm_reponse_container)))
-
-                    
-
-            #         # this is the original version that is also used for the summary notes
-            #         # modified_gpt_4_prompt_response = sanitize_html(detailed_html_text)
-
-            #         # this was an updated version but that periodically failed 
-            #         modified_gpt_4_prompt_response = sanitize_html_2(detailed_html_text)
-
-
-            #         # Convert Markdown to HTML
-            #         html_text = markdown2.markdown(modified_gpt_4_prompt_response)
-
-
-            #         # this should be saved to the detailed_notes folder
-
-            #         save_detailed_notes(category="Detailed Notes", topic=topic_chosen, file_name=uploaded_file_name, file_content=html_text)
-
-            #         st.success("Your detailed notes have been saved as a pdf!")
-
-
-            #         # # Create PDF from the HTML text
-            #         # detailed_pdf_buffer = create_pdf(modified_gpt_4_prompt_response)
-
-            #         # # Add a download button
-            #         # st.download_button(
-            #         #     label="Download Detailed Notes",
-            #         #     data=detailed_pdf_buffer,
-            #         #     file_name=f"{uploaded_file_name}_notebot_detailed_notes.pdf",
-            #         #     mime="application/pdf"
-            #                             # )                
-            #     # now what we'll do is send this combined summary of notes into a final request to combine, standardise and generate a single result
-            #     # which accurately reflects the whole lecture
-            
-
-            # combined_initial_notes_string = ''.join(bag_of_model_result_chunks)
-
-            # # st.markdown(len(combined_initial_notes_string))
-
-
-            # if len(combined_initial_notes_string)>safe_chunk_increment:
-            #     # the notes are still to large to be put into the output layer so run a further reduction 
-
-
-            #     bag_of_model_result_chunks = []
-
-            #     safe_chunk_increment = 20000
-            #     lower_bound = 0
-            #     upper_bound = lower_bound + safe_chunk_increment
-
-            #     number_of_estimated_chunks_of_input_string = round((len(combined_initial_notes_string)/upper_bound))+1
-
-            #     input_lecture_notes = combined_initial_notes_string
-
-            #     note_string_chunks = get_random_chunks(input_lecture_notes)
-
-            #     progress_bar = st.progress(0, text="Generating you some notes!")
-
-            #     for i in range(len(note_string_chunks)):
-                    
-            #         gpt_4_prompt_response = get_gpt4_response_hidden("Help me understand what was in the lecture I just had?",note_string_chunks[i])
-            #         bag_of_model_result_chunks.append(gpt_4_prompt_response)
-            #         print(f"finished processing chunk {i}")
-                    
-            #         # now add the chunk increment to both the upper and lower bound values
-            #         # lower_bound += safe_chunk_increment
-            #         # upper_bound += safe_chunk_increment
-            #         time.sleep(65)
-
-            #         progress_bar.progress(i/(len(note_string_chunks)-1))
-
-            
-            # combined_initial_notes_string = ''.join(bag_of_model_result_chunks)
-
-            # st.markdown(len(combined_initial_notes_string))
             # check the backend for the detailed notes 
         with tempfile.TemporaryDirectory() as temp_dir:
 
@@ -967,13 +754,14 @@ if submit_button and uploaded_file:
             payload = {
                         "text": detailed_notes_string
                     }
-            base_api_web_address = "https://cd38ae4972e0.ngrok-free.app"
+            base_api_web_address = st.secrets["general"]["base_api_web_address"]
             r = requests.post(base_api_web_address+"/get_notebot_summary_notes", json=payload, timeout=120)
             if r.ok:
                 summary_notes_string = r.json()["summary_notes"]
             else:
                 print(r.status_code)
                 pass
+
         with st.expander("Here is your high level summary"):
             st.markdown(summary_notes_string)
                 # the code below will be deprecated and will work by receiving a file from backend loading that file and displaying the detailed notes
