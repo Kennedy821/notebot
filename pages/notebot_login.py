@@ -7,6 +7,7 @@ from google.cloud import storage
 import pandas as pd
 import time
 import tempfile
+import requests
 
 print(jwt.__version__)
 SECRET_KEY = st.secrets["general"]["SECRET_KEY"]
@@ -92,38 +93,28 @@ if st.button("Login"):
 
             with tempfile.TemporaryDirectory() as temp_dir:
 
-                credentials_df = pd.DataFrame([email,password]).T
-                credentials_df.columns = ["email","pw"]
+                payload = {"website": "notebot",
+                        "email": email,
+                        "pw":password}
+                base_api_web_address = st.secrets["general"]["base_api_web_address"]
+                r = requests.post(base_api_web_address+"/get_login_verification_for_user", json=payload, timeout=120)
+                if r.ok:
+                    redirect_url = r.json()["redirect_url"]
 
 
-                # Create credentials object
-                credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
-
-                # Use the credentials to create a client
-                client = storage.Client(credentials=credentials)
+                    time.sleep(5)
 
 
-                # The bucket on GCS in which to write the CSV file
-                bucket = client.bucket(bucket_name)
-                # The name assigned to the CSV file on GCS
-                blob = bucket.blob('user_login_request.csv')
-
-                # Convert the DataFrame to a CSV string with a specified encoding
-                csv_string = credentials_df.to_csv(index=False, encoding='utf-8')
-
-                # Upload the CSV string to GCS
-                blob.upload_from_string(csv_string, 'text/csv')
 
 
-                # wait for the valid url to appear in the bucket
-                redirect_url = []
-                get_login_credentials_for_valid_user()
-                time.sleep(5)
-                if len(redirect_url)>0:
-                    # st.markdown(redirect_url)
-                    redirect_url = str(redirect_url[0]).split(" ")[1]
-                    # st.markdown(redirect_url)
-
+                    # token = generate_token(email)  # Generate token after login
+                    st.success("Login successful!")
+                    
+                    # # Redirect to external site with the token as a query parameter
+                    # redirect_url = f"https://psilproject.streamlit.app/research_app_gcs_login?token={token}"
+                    st.markdown(f"""
+                    <meta http-equiv="refresh" content="0; url={redirect_url}">
+                    """, unsafe_allow_html=True)
 
 
 
